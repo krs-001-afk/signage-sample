@@ -61,7 +61,13 @@ svg#map.zoomed{cursor:grab}svg#map.panning{cursor:grabbing}
 #zoomBar button{padding:5px 10px;font-size:13px;min-width:34px}#zoomBar #zIn,#zoomBar #zOut{font-size:16px;font-weight:700;padding:3px 10px}
 #zl{font-size:12px;color:var(--sub);min-width:42px;text-align:center}
 #mapCard:fullscreen{background:#fff;padding:14px;overflow:auto}#mapCard:fullscreen svg#map{max-height:calc(100vh - 80px)}
-#tip{position:absolute;pointer-events:none;background:#1d2330;color:#fff;font-size:12px;padding:5px 8px;border-radius:6px;display:none;white-space:nowrap;z-index:3}
+#tip{position:absolute;pointer-events:none;background:#1d2330;color:#fff;font-size:12px;padding:9px 11px;border-radius:8px;display:none;z-index:3;min-width:190px;max-width:300px;box-shadow:0 4px 14px rgba(0,0,0,.18);line-height:1.5}
+.tt-h{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}.tt-h b{font-size:14px}.tt-h span{color:#c9cfdb}
+.tt-ex{font-size:10px;border:1px dashed #fff;border-radius:8px;padding:0 5px;color:#fff!important}
+.tt-p{font-size:11px;color:#9aa3b2;margin:5px 0 3px;border-top:1px solid #3a4253;padding-top:5px}
+.tt-c{display:flex;align-items:center;gap:6px;margin:3px 0}.tt-t{font-weight:700;font-size:13px}
+.tt-m{font-size:11px;color:#c9cfdb}.tt-l{font-size:11px;background:#d6453d;border-radius:8px;padding:0 6px;font-weight:700}
+.tt-none{color:#9aa3b2;font-size:12px}
 aside{display:flex;flex-direction:column;gap:16px}
 .sec{padding:14px 16px}
 .sec h2{font-size:13px;margin:0 0 10px;color:var(--sub);font-weight:500}
@@ -307,7 +313,7 @@ function drawTabs(){
   const ti=$('#tabName');if(ti){ti.focus();ti.select()}}
 function switchPlan(id){plan=id;try{localStorage.setItem('sg-plan',id)}catch(e){}bindPlan();cfocus=null;tabConfirm=null;renaming=false;all()}
 function all(){drawTabs();drawPresets();drawPins();drawCounts();drawTable();drawForm()}
-function select(id){sel=id;all();if(id){const r=document.querySelector(`#tb tr[data-id="${CSS.escape(id)}"]`);if(r)r.scrollIntoView({block:'nearest'})}}
+function select(id){sel=id;all()}
 
 function bind(){
   $('#store').value=S.store||'';
@@ -386,8 +392,12 @@ function bind(){
     if(drag){const p=pt(e);drag.it.x=Math.round(p.x-drag.dx);drag.it.y=Math.round(p.y-drag.dy);drag.moved=true;drawPins();tip.style.display='none';return}
     const g=e.target.closest('.pin');if(!g){tip.style.display='none';return}
     const it=S.items.find(i=>i.id===g.dataset.id);const r=$('#mapCard').getBoundingClientRect();
-    tip.innerHTML=`<b>${esc(it.id)}</b> ${esc(it.area)} ${esc(it.loc)}｜${esc(it.status)}｜掲載${it.contents.length}/${MAXC}${lateCount(it)?'｜更新遅れ'+lateCount(it)+'件':''}`;
-    tip.style.display='block';tip.style.left=(e.clientX-r.left+12)+'px';tip.style.top=(e.clientY-r.top+12)+'px'});
+    const cs=it.contents;
+    tip.innerHTML=`<div class="tt-h"><b>${esc(it.id)}</b>${it.kind==='既存'?'<span class="tt-ex">既存</span>':''}<span>${esc(it.area)} ${esc(it.loc)}</span></div>
+      <div class="tt-p">${esc(planName(plan))}の告知（${cs.length}/${MAXC}）</div>`+
+      (cs.length?cs.map(c=>{const d=due(c);return `<div class="tt-c"><span class="sw" style="background:${ccol(c.t)}"></span><span class="tt-t">${esc(c.t)||'（未入力）'}</span>${c.f?`<span class="tt-m">頻度${esc(c.f)}</span>`:''}${d&&d.state==='late'?`<span class="tt-l">${d.days}日遅れ</span>`:d&&d.state==='ok'?`<span class="tt-m">次回${fmt(d.next)}</span>`:''}</div>`}).join(''):'<div class="tt-none">告知の登録はありません</div>');
+    tip.style.display='block';const tw=tip.offsetWidth,th=tip.offsetHeight;let lx=e.clientX-r.left+14,ly=e.clientY-r.top+14;
+    if(lx+tw>r.width-8)lx=e.clientX-r.left-tw-14;if(ly+th>r.height-8)ly=e.clientY-r.top-th-14;tip.style.left=Math.max(4,lx)+'px';tip.style.top=Math.max(4,ly)+'px'});
   svg.addEventListener('pointerleave',()=>tip.style.display='none');
   const end=()=>{if(drag&&drag.moved)setDirty(true);drag=null};
   svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);
