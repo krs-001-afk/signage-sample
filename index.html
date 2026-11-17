@@ -88,6 +88,8 @@ button.x{padding:4px 9px;color:var(--sub)}
 button.chip{font-size:12px;padding:4px 10px;border-radius:14px;background:#eef3fd;border-color:#cfdcf7;color:#22509f}
 button.chip:hover{background:#e0eafb}button.chip:disabled{background:#f3f4f6;border-color:var(--line);color:#a0a6b2}
 button.chip.edit{background:#fff;border-style:dashed;color:var(--sub)}
+.delbox{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}.delbox p{font-size:13px;margin:0 0 8px;line-height:1.6}
+.delact{display:flex;flex-wrap:wrap;gap:6px}button.dangerfill{background:#d6453d;border-color:#d6453d;color:#fff}button.dangerfill:hover{background:#b8322b}
 .addc{width:100%;border-style:dashed;color:var(--acc)}
 .limit{font-size:12px;color:var(--sub);text-align:center;padding:8px;border:1px dashed var(--line);border-radius:8px}
 .st{font-size:11px;padding:1px 6px;border-radius:10px;white-space:nowrap}
@@ -278,7 +280,7 @@ function drawTable(){
 function drawForm(){
   const it=S.items.find(i=>i.id===sel);const f=$('#form');
   if(!it){f.innerHTML=`<h2>詳細</h2><p class="empty">地図のピンか台帳の行をクリックすると、ここで状態・掲載内容・更新頻度などを編集できます。<br>「配置を編集」でピンの移動・追加・削除ができます。</p>`;return}
-  f.innerHTML=`<div id="formHead"><span class="big">${esc(it.id)}</span><span>${edit?'<button class="danger" id="bDel">削除</button>':''} <button id="bClose">閉じる</button></span></div>
+  f.innerHTML=`<div id="formHead"><span class="big">${esc(it.id)}</span><span><button id="bClose">閉じる</button></span></div>
   <div class="row"><label>状態</label><div class="seg">${STATUS.map(s=>`<button data-st="${s.k}" class="${it.status===s.k?'cur':''}"><span class="dot" style="background:${s.c}"></span>${s.k}</button>`).join('')}</div></div>
   <div class="row"><label>種別</label><div class="seg">${['新設','既存'].map(k=>`<button data-kind="${k}" class="${it.kind===k?'cur':''}">${k==='既存'?'既存サイネージ':'新設'}</button>`).join('')}</div></div>
   <div class="two row"><div><label>ID</label><input data-f="id" value="${esc(it.id)}"></div><div><label>エリア</label><input data-f="area" value="${esc(it.area)}"></div></div>
@@ -292,7 +294,8 @@ function drawForm(){
     <div class="cstate">${c.l?'最終更新 '+esc(c.l.replace(/-/g,'/'))+'　':''}${stateHtml(c)}</div></div>`).join('')}
    ${it.contents.length<MAXC?`<div class="pre"><span>候補から追加</span>${S.presets.map(p=>{const used=it.contents.some(c=>c.t===p);return `<button class="chip" data-pre="${esc(p)}"${used?' disabled title="追加済み"':''}>${esc(p)}</button>`}).join('')}<button class="chip edit" id="preEdit">候補を編集</button></div><button id="cAdd" class="addc">＋ 自由入力で追加</button>`:`<div class="limit">掲載内容は1台につき最大${MAXC}件です</div>`}</div>
   <div class="row"><label>設置日</label><input type="date" data-f="date" value="${esc(it.date)}"></div>
-  <div class="row"><label>備考</label><textarea data-f="note">${esc(it.note)}</textarea></div>`;
+  <div class="row"><label>備考</label><textarea data-f="note">${esc(it.note)}</textarea></div>
+  <div class="delbox" id="delBox"><button class="danger" id="bDel">このサイネージを削除</button></div>`;
 }
 function drawPresets(){$('#presetList').innerHTML=S.presets.map(p=>`<option value="${esc(p)}">`).join('')}
 function drawTabs(){
@@ -324,7 +327,13 @@ function bind(){
     else if(b.id==='preEdit'){$('#preTxt').value=S.presets.join('\n');$('#mPre').classList.add('open');$('#preTxt').focus()}
     else if(b.dataset.cdel!=null&&it){it.contents.splice(+b.dataset.cdel,1);setDirty(true);all()}
     else if(b.dataset.ctoday!=null&&it){const d=new Date();it.contents[+b.dataset.ctoday].l=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');setDirty(true);all()}
-    else if(b.id==='bDel'&&it){if(b.dataset.c){S.items=S.items.filter(i=>i!==it);setDirty(true);select(null);toast(it.id+' を削除しました')}else{b.dataset.c='1';b.textContent='本当に削除'}}
+    else if(b.id==='bDel'&&it){$('#delBox').innerHTML=`<p><b>${esc(it.id)}</b> を削除します。掲載内容（全タブ分）も消えます。</p><div class="delact"><button class="dangerfill" id="bDelRe">削除して番号を詰める</button><button class="danger" id="bDelKeep">削除（番号はそのまま）</button><button id="bDelCancel">やめる</button></div>`}
+    else if(b.id==='bDelCancel')drawForm();
+    else if((b.id==='bDelRe'||b.id==='bDelKeep')&&it){const old=it.id;S.items=S.items.filter(i=>i!==it);let msg=old+' を削除しました';
+      if(b.id==='bDelRe'){const num=i=>{const m=/^S(\d+)$/.exec(i.id);return m?+m[1]:null};const ns=S.items.filter(i=>num(i)!=null).sort((a,b)=>num(a)-num(b));
+        const w=Math.max(2,String(ns.length).length);let ch=0;ns.forEach((i,k)=>{const nid='S'+String(k+1).padStart(w,'0');if(i.id!==nid){i.id=nid;ch++}});
+        S.items.sort((a,b)=>(num(a)??1e9)-(num(b)??1e9));if(ch)msg+='（'+ch+'台の番号を詰めました）'}
+      setDirty(true);select(null);toast(msg)}
   });
   const cEdit=e=>{const t=e.target;if(t.dataset.c==null)return false;const it=S.items.find(i=>i.id===sel);if(!it)return true;
     it.contents[+t.dataset.c][t.dataset.cf]=t.value;setDirty(true);drawPins();drawTable();drawCounts();
