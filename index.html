@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>サイネージ配置管理（サンプル）</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>サイネージ配置管理（共有サンプル）</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style id="css">
 :root{--bg:#f4f5f7;--card:#fff;--ink:#1d2330;--sub:#6b7385;--line:#e2e5eb;--acc:#2f6fde;--island:#fafbfc;--islandLine:#9aa3b2}
 *{box-sizing:border-box}
@@ -9,8 +9,9 @@ header h1{font-size:17px;margin:0;font-weight:700}
 #store{border:1px solid transparent;border-radius:6px;padding:4px 8px;font:inherit;font-size:14px;color:var(--sub);width:200px;background:transparent}
 #store:hover,#store:focus{border-color:var(--line);background:#fff;outline:none}
 .sp{flex:1}
-.sample{font-size:11px;background:#fff6e0;color:#8a5a00;border:1px solid #f1d9a0;border-radius:12px;padding:2px 9px}
-.filebtn{font-size:13px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 12px;cursor:pointer}.filebtn:hover{background:#f0f2f6}
+.sample{font-size:11px;background:#e9f6ee;color:#1f6b41;border:1px solid #bfe3cc;border-radius:12px;padding:2px 9px}
+.remote{font-size:12px;background:#fde5e3;color:#b8322b;border-radius:12px;padding:2px 9px;cursor:pointer;font-weight:700}
+.oldrow{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px}.oldrow span{font-size:12px;color:var(--sub)}
 #saveState{font-size:12px;color:var(--sub)}
 #saveState.dirty{color:#c4471f;font-weight:500}
 button{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:7px;padding:6px 12px;cursor:pointer}
@@ -133,16 +134,15 @@ tr.sel{background:#eaf1fd}
 </style></head><body>
 <script id="data" type="application/json">{"store": "", "updatedAt": "", "items": [{"id": "S01", "area": "上段", "loc": "EV前", "x": 805, "y": 141, "w": 45, "h": 40, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S02", "area": "スロット側", "loc": "通路1 上端", "x": 331, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S03", "area": "スロット側", "loc": "通路2 上端", "x": 460, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S04", "area": "スロット側", "loc": "通路3 上端", "x": 589, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S05", "area": "スロット側", "loc": "通路5 上端", "x": 848, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S06", "area": "スロット側", "loc": "通路1 下端", "x": 331, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S07", "area": "スロット側", "loc": "通路2 下端", "x": 460, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S08", "area": "スロット側", "loc": "通路3 下端", "x": 589, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S09", "area": "スロット側", "loc": "通路4 下端", "x": 719, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S10", "area": "スロット側", "loc": "通路5 下端", "x": 848, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S11", "area": "スロット側", "loc": "右端 柱（上）", "x": 978, "y": 573, "w": 42, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S12", "area": "スロット側", "loc": "右端 柱（下）", "x": 978, "y": 612, "w": 42, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S13", "area": "スロット側", "loc": "通路1 上端", "x": 331, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S14", "area": "スロット側", "loc": "通路2 上端", "x": 460, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S15", "area": "スロット側", "loc": "通路4 上端", "x": 719, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S16", "area": "カウンター付近", "loc": "左壁面（上）", "x": 115, "y": 866, "w": 46, "h": 41, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S17", "area": "カウンター付近", "loc": "左壁面（下）", "x": 115, "y": 924, "w": 46, "h": 41, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S18", "area": "スロット側", "loc": "通路1 下端", "x": 331, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S19", "area": "スロット側", "loc": "通路2 下端", "x": 460, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S20", "area": "スロット側", "loc": "通路3 下端", "x": 589, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S21", "area": "スロット側", "loc": "通路4 下端", "x": 719, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S22", "area": "スロット側", "loc": "通路5 下端", "x": 848, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S23", "area": "連絡通路", "loc": "EV横（左）", "x": 697, "y": 1022, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S24", "area": "連絡通路", "loc": "EV横（右）", "x": 762, "y": 1022, "w": 43, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S25", "area": "パチンコ側", "loc": "EV下（右）", "x": 848, "y": 1140, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S26", "area": "パチンコ側", "loc": "通路1 上端", "x": 331, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S27", "area": "パチンコ側", "loc": "通路2 上端", "x": 460, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S28", "area": "パチンコ側", "loc": "通路3 上端", "x": 589, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S29", "area": "パチンコ側", "loc": "通路4 上端", "x": 719, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S30", "area": "パチンコ側", "loc": "通路6 上端", "x": 956, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S31", "area": "パチンコ側", "loc": "通路1 下端", "x": 331, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S32", "area": "パチンコ側", "loc": "通路2 下端", "x": 460, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S33", "area": "パチンコ側", "loc": "通路3 下端", "x": 589, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S34", "area": "パチンコ側", "loc": "通路5 下端", "x": 848, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S35", "area": "パチンコ側", "loc": "通路6 下端", "x": 977, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S36", "kind": "既存", "area": "スロット側", "loc": "出入口前（左）", "x": 58, "y": 431, "w": 40, "h": 36, "status": "予定", "size": "", "group": "", "contents": [], "date": "", "note": ""}, {"id": "S37", "kind": "既存", "area": "スロット側", "loc": "出入口前（中）", "x": 117, "y": 431, "w": 40, "h": 36, "status": "予定", "size": "", "group": "", "contents": [], "date": "", "note": ""}, {"id": "S38", "kind": "既存", "area": "スロット側", "loc": "出入口前（右）", "x": 174, "y": 431, "w": 40, "h": 36, "status": "予定", "size": "", "group": "", "contents": [], "date": "", "note": ""}, {"id": "S39", "kind": "既存", "area": "スロット側", "loc": "島1左 下端", "x": 195, "y": 553, "w": 40, "h": 36, "status": "予定", "size": "", "group": "", "contents": [], "date": "", "note": ""}, {"id": "S40", "kind": "既存", "area": "スロット側", "loc": "中段 島1左 上端", "x": 201, "y": 629, "w": 40, "h": 36, "status": "予定", "size": "", "group": "", "contents": [], "date": "", "note": ""}]}</script>
 <script id="app">
-(function(){
-const HEAD='<!DOCTYPE html>\n<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>サイネージ配置管理（サンプル）</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">';
+window.__startApp=function(){
+const HEAD='<!DOCTYPE html>\n<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>サイネージ配置管理（共有サンプル）</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">';
 const STATUS=[{k:'予定',c:'#8a94a6'},{k:'確定',c:'#2f6fde'},{k:'設置済',c:'#2e9d5b'},{k:'保留',c:'#d99a1e'},{k:'要対応',c:'#d6453d'}];
 const MAXC=3;
 const FREQ=[{k:'高'},{k:'低'}];
 const COLS=[['tab','タブ'],['id','ID'],['kind','種別'],['area','エリア'],['loc','場所'],['status','状態'],['size','サイズ・機種'],['group','配信グループ']];
 for(let n=1;n<=MAXC;n++)COLS.push(['c'+n+'t','掲載内容'+n],['c'+n+'f','更新頻度'+n],['c'+n+'l','最終更新日'+n]);
 COLS.push(['date','設置日'],['note','備考'],['x','X'],['y','Y']);
-const LSK='signage-sample-data-v4';
-const S=(()=>{try{const v=localStorage.getItem(LSK);if(v)return JSON.parse(v)}catch(e){}return JSON.parse(document.getElementById('data').textContent)})();
+const S=window.SG.data;
 S.items.forEach(it=>{if(!Array.isArray(it.contents)){it.contents=it.content?[{t:it.content,f:'',l:''}]:[]}delete it.content;if(it.group==null)it.group='';if(it.contents.length>MAXC)it.contents.length=MAXC});
 if(!S.freqDays)S.freqDays={'高':7,'低':30};
 const OLDF={'毎日':'高','毎週':'高','隔週':'高','毎月':'低','不定期':'低','固定':'低'};
@@ -193,7 +193,7 @@ function staticMap(){
 function shell(){
   document.body.insertAdjacentHTML('afterbegin',`
 <header><h1>サイネージ配置管理</h1><input id="store" placeholder="店舗名を入力" aria-label="店舗名"><div class="sp"></div>
-<span class="sample">サンプル版：データはこのブラウザ内に保存されます</span><span id="saveState"></span><button id="bJsonOut">データを書き出す</button><label class="filebtn">データを読み込む<input type="file" id="jsonIn" accept=".json,application/json" hidden></label><button id="bReset">初期状態に戻す</button><button id="bSave" class="primary" disabled>保存</button></header>
+<span class="sample">共有版：保存すると全員の画面に反映されます</span><span id="remoteNote" style="display:none" class="remote">ほかの人が更新しました</span><span id="saveState"></span><button id="bOld">以前のデータ</button><button id="bWho">合言葉・名前</button><button id="bSave" class="primary" disabled>保存</button></header>
 <nav id="tabs"></nav>
 <main>
  <section class="card" id="mapCard">
@@ -221,6 +221,8 @@ function shell(){
 <div class="modal" id="mPre"><div class="mbox"><h3>掲載内容の候補を編集</h3><p>1行に1つずつ入力してください。全サイネージ共通の候補になります（登録済みの掲載内容は変わりません）。</p>
 <textarea id="preTxt" style="min-height:160px;font-family:inherit;font-size:14px"></textarea><div class="mact"><button id="preCancel">キャンセル</button><button class="primary" id="preOk">保存</button></div></div></div>
 <datalist id="presetList"></datalist>
+<div class="modal" id="mConf"><div class="mbox"><h3>ほかの人の保存と重なりました</h3><p id="confTxt"></p><p>最新の内容を読み込むと、あなたの未保存の変更は消えます。残したい内容があればメモしてから読み込んでください。</p><div class="mact"><button id="confClose">あとで</button><button class="primary" id="confReload">最新の内容を読み込む</button></div></div></div>
+<div class="modal" id="mOld"><div class="mbox"><h3>このブラウザに残っている以前の保存データ</h3><p>共有版にする前に、このブラウザで保存した内容です。読み込んだあと「保存」を押すと共有データとして反映されます（今の共有データは上書きされます）。番号を振り直す前のデータは、番号が今と異なる場合があります。</p><div id="oldList"></div><div class="mact"><button id="oldClose">閉じる</button></div></div></div>
 <div id="toast"></div>`);
 }
 
@@ -385,7 +387,7 @@ function bind(){
   $('#bCopy').addEventListener('click',()=>{const t=toTable('\t');
     (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('コピーしました。スプレッドシートのA1セルに貼り付けてください')).catch(()=>{$('#copyTxt').value=t;$('#mCopy').classList.add('open');$('#copyTxt').select()})});
   $('#copyClose').addEventListener('click',()=>$('#mCopy').classList.remove('open'));
-  $('#bCsv').addEventListener('click',()=>dlFile('signage_'+stamp()+'.csv','\ufeff'+toTable(',',S.plans.map(p=>p.id)),'text/csv'));
+  $('#bCsv').addEventListener('click',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+toTable(',',S.plans.map(p=>p.id))],{type:'text/csv'}));a.download='signage_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500)});
   $('#bImp').addEventListener('click',()=>{$('#impTxt').value='';$('#mImp').classList.add('open');$('#impTxt').focus()});
   $('#impCancel').addEventListener('click',()=>$('#mImp').classList.remove('open'));
   $('#impOk').addEventListener('click',()=>{const r=importText($('#impTxt').value);$('#mImp').classList.remove('open');if(r)toast(r)});
@@ -438,18 +440,65 @@ function importText(txt){
   bindPlan();setDirty(true);all();return `${up}件を更新、${ad}件を追加しました`}
 
 async function save(){
-  if(!dirty)return;const d=new Date();S.updatedAt=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-  try{localStorage.setItem(LSK,JSON.stringify(S,(k,v)=>k==='contents'?undefined:v));setDirty(false);toast('このブラウザに保存しました')}
-  catch(e){toast('保存できませんでした（ブラウザの設定を確認してください）')}}
-function dlFile(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
-const stamp=()=>new Date().toISOString().slice(0,10);
+  if(!dirty||saving)return;saving=true;const b=$('#bSave');b.disabled=true;b.textContent='保存中…';
+  const payload={key:SG.key,user:SG.user,baseRev:SG.rev,data:JSON.parse(JSON.stringify(S,(k,v)=>k==='contents'?undefined:v)),
+    table:toTable('\t',S.plans.map(p=>p.id)).split('\n').map(r=>r.split('\t'))};
+  try{const r=await (await fetch(SG.api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})).json();
+    if(r.ok){SG.rev=r.rev;S.updatedAt=r.updatedAt+(SG.user?'（'+SG.user+'）':'');dirty=false;setDirty(false);toast('保存しました。共有データに反映されました');try{sessionStorage.removeItem('sg-override')}catch(e){}}
+    else if(r.error==='conflict'){showConflict(r)}
+    else if(r.error==='bad_key'){toast('合言葉が違います');SG.askKey()}
+    else toast('保存できませんでした（'+r.error+'）')}
+  catch(e){toast('保存できませんでした。通信状態を確認してください')}
+  finally{saving=false;b.textContent='保存';if(dirty)b.disabled=false}}
+let saving=false;
+function showConflict(r){const m=$('#mConf');$('#confTxt').textContent=(r.updatedBy?r.updatedBy+'さんが':'ほかの人が')+(r.updatedAt?r.updatedAt+'に':'')+'先に保存しました。';m.classList.add('open')}
+async function poll(){if(document.hidden||saving)return;try{const r=await (await fetch(SG.api+'?key='+encodeURIComponent(SG.key)+'&t='+Date.now())).json();
+  if(r.ok&&r.rev>SG.rev){if(!dirty){location.reload()}else{$('#remoteNote').style.display='';}}}catch(e){}}
+setInterval(poll,30000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
 
 shell();bind();document.querySelectorAll('.cmode [data-cm]').forEach(x=>x.classList.toggle('on',x.dataset.cm===cmode));all();setDirty(false);
 art={};setDirty(false);$('#bCsv').style.display='';
-$('#bJsonOut').addEventListener('click',()=>dlFile('signage_data_'+stamp()+'.json',JSON.stringify(S,(k,v)=>k==='contents'?undefined:v,1),'application/json'));
-$('#jsonIn').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.items))throw 0;
-  localStorage.setItem(LSK,JSON.stringify(d));location.reload()}catch(err){toast('データファイルを読み込めませんでした')}};r.readAsText(f)});
-$('#bReset').addEventListener('click',e=>{const b=e.target;if(!b.dataset.c){b.dataset.c='1';b.textContent='本当に初期状態に戻す';return}try{localStorage.removeItem(LSK)}catch(err){}location.reload()});
+if(SG.override){setDirty(true);toast('以前のデータを読み込みました。「保存」を押すと共有データに反映されます')}
+$('#confReload').addEventListener('click',()=>{dirty=false;location.reload()});
+$('#confClose').addEventListener('click',()=>$('#mConf').classList.remove('open'));
+$('#remoteNote').addEventListener('click',()=>{if(!dirty)location.reload();else $('#mConf').classList.add('open')});
+$('#bOld').addEventListener('click',()=>{const L=SG.localSaves();$('#oldList').innerHTML=L.length?L.map((x,i)=>`<div class="oldrow"><div><b>${esc(x.label)}</b><br><span>${x.n}台・${esc(x.updatedAt||'保存日時不明')}</span></div><button data-old="${i}">この内容を読み込む</button></div>`).join(''):'<p class="empty">このブラウザに以前の保存データは見つかりませんでした。</p>';$('#mOld').classList.add('open')});
+$('#oldList').addEventListener('click',e=>{const b=e.target.closest('[data-old]');if(!b)return;const x=SG.localSaves()[+b.dataset.old];try{sessionStorage.setItem('sg-override',JSON.stringify(x.data))}catch(err){}location.reload()});
+$('#oldClose').addEventListener('click',()=>$('#mOld').classList.remove('open'));
+$('#bWho').addEventListener('click',()=>SG.askKey(true));
+};
+</script>
+
+<div id="boot"><div class="bootbox"><h2>サイネージ配置管理</h2><div id="bootMsg">共有データを読み込んでいます…</div>
+<form id="keyForm" style="display:none"><label>合言葉<input id="kIn" type="password" autocomplete="current-password" required></label><label>お名前（保存した人として記録されます・任意）<input id="nIn" maxlength="20"></label><button class="primary" type="submit">はじめる</button></form>
+<button id="bootRetry" style="display:none">もう一度読み込む</button></div></div>
+<style>#boot{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}.bootbox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;width:min(380px,100%)}.bootbox h2{font-size:17px;margin:0 0 12px}#bootMsg{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:12px}#keyForm label{display:block;font-size:12px;color:var(--sub);margin-bottom:10px}#keyForm input{display:block;width:100%;margin-top:4px;font:inherit;font-size:14px;border:1px solid var(--line);border-radius:7px;padding:8px 10px}#keyForm button{width:100%;padding:9px}</style>
+<script>
+(function(){
+var API="https://script.google.com/macros/s/AKfycbyKe8gO0uk-y-bJuQROnlGk-mKgW_rxYkf3o1YnFybmUavdJ_4oPUYBUgJuibM2DZtL/exec";
+var LS=function(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}};
+var seed=JSON.parse(document.getElementById('data').textContent);
+var SG=window.SG={api:API,key:LS('sg-key')||'',user:LS('sg-user')||'',rev:0,override:false,data:null};
+var msg=document.getElementById('bootMsg'),form=document.getElementById('keyForm'),retry=document.getElementById('bootRetry'),boot=document.getElementById('boot');
+SG.localSaves=function(){var out=[],keys=[['signage-sample-data-v4','最新の配置（40台）'],['signage-sample-data-v3','既存サイネージ追加後'],['signage-sample-data-v2','25番削除後（35台）'],['signage-sample-data','最初のサンプル（36台）']];
+  keys.forEach(function(k){var v=LS(k[0]);if(!v)return;try{var d=JSON.parse(v);if(d&&Array.isArray(d.items))out.push({label:k[1],n:d.items.length,updatedAt:d.updatedAt,data:d})}catch(e){}});return out};
+SG.askKey=function(cancelable){boot.style.display='';msg.textContent='合言葉を入力してください。お名前は保存したときの記録に使います。';form.style.display='';retry.style.display='none';
+  document.getElementById('kIn').value=SG.key;document.getElementById('nIn').value=SG.user;document.getElementById('kIn').focus();SG._restart=!!window.__started};
+form.addEventListener('submit',function(e){e.preventDefault();SG.key=document.getElementById('kIn').value.trim();SG.user=document.getElementById('nIn').value.trim();LS('sg-key',SG.key);LS('sg-user',SG.user||null);
+  if(window.__started){location.reload();return}form.style.display='none';load()});
+retry.addEventListener('click',function(){retry.style.display='none';load()});
+function start(){var ov=null;try{ov=sessionStorage.getItem('sg-override')}catch(e){}
+  if(ov){try{SG.data=JSON.parse(ov);SG.override=true}catch(e){}}
+  if(!SG.data)SG.data=seed;window.__started=true;boot.style.display='none';window.__startApp()}
+function load(){if(!API){msg.textContent='共有データの保存先がまだ設定されていません。';return}
+  if(!SG.key){SG.askKey();return}
+  msg.textContent='共有データを読み込んでいます…';
+  fetch(API+'?key='+encodeURIComponent(SG.key)+'&t='+Date.now()).then(function(r){return r.json()}).then(function(r){
+    if(!r.ok){if(r.error==='bad_key'){SG.key='';LS('sg-key',null);SG.askKey();msg.textContent='合言葉が違います。もう一度入力してください。';return}
+      msg.textContent='読み込めませんでした（'+r.error+'）';retry.style.display='';return}
+    SG.rev=r.rev||0;if(r.data){SG.data=r.data;if(r.updatedAt)SG.data.updatedAt=r.updatedAt+(r.updatedBy?'（'+r.updatedBy+'）':'')}start()})
+  .catch(function(){msg.textContent='共有データに接続できませんでした。通信状態を確認してください。';retry.style.display=''})}
+load();
 })();
 </script>
 </body></html>
