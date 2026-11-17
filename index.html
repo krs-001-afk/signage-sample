@@ -40,7 +40,8 @@ svg#map{width:100%;height:auto;display:block;max-height:calc(100vh - 150px);touc
 .wall{stroke:#5b6475;stroke-width:3;fill:none}path.wall{fill:#f7f8fa}.area{fill:#3b4352;font-weight:500}
 .zone{font-size:22px;fill:#9aa3b2;font-weight:700;letter-spacing:.1em}
 .pin rect.bd{stroke:#fff;stroke-width:2.5;cursor:pointer}.pin rect.sg{stroke:none;cursor:pointer}
-.pin.cm text{paint-order:stroke;stroke:rgba(0,0,0,.45);stroke-width:4px}.pin.cm.empty text{fill:#6b7385;stroke:none}
+.pin.cm text{paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:4px}
+.pin.cm.dk text{fill:#1d2330;stroke:rgba(255,255,255,.7)}.pin line.sep{stroke:#fff;stroke-width:2.5;pointer-events:none}.pin.cm.empty text{fill:#6b7385;stroke:none}
 .cmode{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden}.cmode span{font-size:12px;color:var(--sub);padding:0 8px}
 .cmode button{border:none;border-left:1px solid var(--line);border-radius:0;padding:6px 12px}.cmode button.on{background:#1d2330;color:#fff}
 #legend{display:flex;flex-wrap:wrap;gap:6px;padding:0 4px 8px;align-items:center}
@@ -239,8 +240,9 @@ function setDirty(d){dirty=d;const s=$('#saveState');
   if(!art){s.textContent=d?'変更あり（この画面では保存できません。コピーで書き出してください）':'';s.className=d?'dirty':'';$('#bSave').disabled=true;return}
   s.className=d?'dirty':'';s.textContent=d?'未保存の変更があります':(S.updatedAt?'最終保存 '+S.updatedAt:'');$('#bSave').disabled=!d}
 
-const PAL=['#e0473b','#2f6fde','#e39a1b','#2e9d5b','#8e55c9','#1aa3b8','#d4558f','#7d8b2a','#b5651d','#4b5bd6'];
-const OTHER='#6f7787',NONE='#dfe3e9';
+const PAL=['#e8003d','#0062e0','#ffc400','#00a650','#8a2be2','#00b7d4','#ff5fa2','#8b5a2b','#1f2a5c','#9acd32'];
+const light=h=>{const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)>165};
+const OTHER='#4a5568',NONE='#dfe3e9';
 let cmode='content',cfocus=null;try{const m=localStorage.getItem('sg-cmode');if(m==='status'||m==='content')cmode=m}catch(e){}
 const ccol=t=>{const i=S.presets.indexOf(t);return i>=0?PAL[i%PAL.length]:OTHER};
 const ckey=t=>S.presets.includes(t)?t:'__other';
@@ -256,9 +258,10 @@ function drawPins(){
     const x0=cx-W/2,y0=cy-H/2;let body;
     if(cmode==='content'){const cs=it.contents;
       if(!cs.length)body=`<rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="${NONE}"/>`;
-      else{const sw=W/cs.length;body=`<clipPath id="cp${i}"><rect x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6"/></clipPath><g clip-path="url(#cp${i})">${cs.map((c,j)=>`<rect class="sg" x="${x0+j*sw}" y="${y0}" width="${sw+.5}" height="${H}" fill="${ccol(c.t)}"/>`).join('')}</g><rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="none"/>`}}
+      else{const sw=W/cs.length;body=`<clipPath id="cp${i}"><rect x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6"/></clipPath><g clip-path="url(#cp${i})">${cs.map((c,j)=>`<rect class="sg" x="${x0+j*sw}" y="${y0}" width="${sw+.5}" height="${H}" fill="${ccol(c.t)}"/>`).join('')}${cs.slice(1).map((c,j)=>`<line class="sep" x1="${x0+(j+1)*sw}" x2="${x0+(j+1)*sw}" y1="${y0}" y2="${y0+H}"/>`).join('')}</g><rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="none"/>`}}
     else body=`<rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="${col(it.status)}"/>`;
-    return `<g class="pin${it.kind==='既存'?' ex':''}${visible(it)?'':' dim'}${sel===it.id?' sel':''}${cmode==='content'?' cm'+(it.contents.length?'':' empty'):''}" data-id="${esc(it.id)}">${body}<text x="${cx}" y="${cy}">${esc(String(it.id).replace(/^S/,''))}</text>${lateCount(it)?`<circle class="late" cx="${cx+W/2-2}" cy="${cy-H/2+2}" r="9"/>`:''}</g>`}).join('');
+    const dk=cmode==='content'&&it.contents.length&&it.contents.every(c=>light(ccol(c.t)));
+    return `<g class="pin${dk?' dk':''}${it.kind==='既存'?' ex':''}${visible(it)?'':' dim'}${sel===it.id?' sel':''}${cmode==='content'?' cm'+(it.contents.length?'':' empty'):''}" data-id="${esc(it.id)}">${body}<text x="${cx}" y="${cy}">${esc(String(it.id).replace(/^S/,''))}</text>${lateCount(it)?`<circle class="late" cx="${cx+W/2-2}" cy="${cy-H/2+2}" r="9"/>`:''}</g>`}).join('');
   drawLegend();
 }
 function drawLegend(){const L=$('#legend');if(cmode!=='content'){L.style.display='none';return}L.style.display='';
