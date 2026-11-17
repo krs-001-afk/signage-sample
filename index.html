@@ -48,9 +48,18 @@ button.lg.on{background:#eef1f6;color:var(--ink);border-color:#1d2330;box-shadow
 .sw{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
 .pin text{font-size:20px;fill:#fff;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .pin.dim{opacity:.18}
+.pin.ex rect.bd{stroke:#1d2330;stroke-width:3.5;stroke-dasharray:7 4}
+.exsw{display:inline-block;width:14px;height:11px;border:2px dashed #1d2330;border-radius:3px;flex:none}
+.exb{font-size:10px;border:1px dashed #1d2330;border-radius:8px;padding:0 5px;margin-left:3px;color:#1d2330;white-space:nowrap}
+#exLegend{position:absolute;left:16px;bottom:16px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sub);background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:8px;padding:6px 10px;z-index:2}
 .pin.sel rect.bd{stroke:#1d2330;stroke-width:5}
 .edit .pin rect{cursor:move!important}
 .adding svg#map{cursor:crosshair}
+svg#map.zoomed{cursor:grab}svg#map.panning{cursor:grabbing}
+#zoomBar{position:absolute;right:16px;top:96px;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:10px;padding:4px;box-shadow:0 2px 8px rgba(20,24,33,.08);z-index:2}
+#zoomBar button{padding:5px 10px;font-size:13px;min-width:34px}#zoomBar #zIn,#zoomBar #zOut{font-size:16px;font-weight:700;padding:3px 10px}
+#zl{font-size:12px;color:var(--sub);min-width:42px;text-align:center}
+#mapCard:fullscreen{background:#fff;padding:14px;overflow:auto}#mapCard:fullscreen svg#map{max-height:calc(100vh - 80px)}
 #tip{position:absolute;pointer-events:none;background:#1d2330;color:#fff;font-size:12px;padding:5px 8px;border-radius:6px;display:none;white-space:nowrap;z-index:3}
 aside{display:flex;flex-direction:column;gap:16px}
 .sec{padding:14px 16px}
@@ -122,14 +131,14 @@ tr.sel{background:#eaf1fd}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1d2330;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;display:none;z-index:30}
 @media (max-width:900px){main{grid-template-columns:1fr;padding:12px}header{padding:10px 12px}#store{width:140px}}
 </style></head><body>
-<script id="data" type="application/json">{"store": "", "updatedAt": "", "items": [{"id": "S01", "area": "上段", "loc": "EV前", "x": 805, "y": 141, "w": 45, "h": 40, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S02", "area": "スロット側", "loc": "通路1 上端", "x": 331, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S03", "area": "スロット側", "loc": "通路2 上端", "x": 460, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S04", "area": "スロット側", "loc": "通路3 上端", "x": 589, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S05", "area": "スロット側", "loc": "通路5 上端", "x": 848, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S06", "area": "スロット側", "loc": "通路1 下端", "x": 331, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S07", "area": "スロット側", "loc": "通路2 下端", "x": 460, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S08", "area": "スロット側", "loc": "通路3 下端", "x": 589, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S09", "area": "スロット側", "loc": "通路4 下端", "x": 719, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S10", "area": "スロット側", "loc": "通路5 下端", "x": 848, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S11", "area": "スロット側", "loc": "右端 柱（上）", "x": 978, "y": 573, "w": 42, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S12", "area": "スロット側", "loc": "右端 柱（下）", "x": 978, "y": 612, "w": 42, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S13", "area": "スロット側", "loc": "通路1 上端", "x": 331, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S14", "area": "スロット側", "loc": "通路2 上端", "x": 460, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S15", "area": "スロット側", "loc": "通路4 上端", "x": 719, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S16", "area": "カウンター付近", "loc": "左壁面（上）", "x": 115, "y": 866, "w": 46, "h": 41, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S17", "area": "カウンター付近", "loc": "左壁面（下）", "x": 115, "y": 924, "w": 46, "h": 41, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S18", "area": "スロット側", "loc": "通路1 下端", "x": 331, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S19", "area": "スロット側", "loc": "通路2 下端", "x": 460, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S20", "area": "スロット側", "loc": "通路3 下端", "x": 589, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S21", "area": "スロット側", "loc": "通路4 下端", "x": 719, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S22", "area": "スロット側", "loc": "通路5 下端", "x": 848, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S23", "area": "連絡通路", "loc": "EV横（左）", "x": 697, "y": 1022, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S24", "area": "連絡通路", "loc": "EV横（右）", "x": 762, "y": 1022, "w": 43, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S25", "area": "パチンコ側", "loc": "EV下（右）", "x": 848, "y": 1140, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S26", "area": "パチンコ側", "loc": "通路1 上端", "x": 331, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S27", "area": "パチンコ側", "loc": "通路2 上端", "x": 460, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S28", "area": "パチンコ側", "loc": "通路3 上端", "x": 589, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S29", "area": "パチンコ側", "loc": "通路4 上端", "x": 719, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S30", "area": "パチンコ側", "loc": "通路6 上端", "x": 956, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S31", "area": "パチンコ側", "loc": "通路1 下端", "x": 331, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S32", "area": "パチンコ側", "loc": "通路2 下端", "x": 460, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S33", "area": "パチンコ側", "loc": "通路3 下端", "x": 589, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S34", "area": "パチンコ側", "loc": "通路5 下端", "x": 848, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S35", "area": "パチンコ側", "loc": "通路6 下端", "x": 977, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}]}</script>
+<script id="data" type="application/json">{"store": "", "updatedAt": "", "items": [{"id": "S01", "area": "上段", "loc": "EV前", "x": 805, "y": 141, "w": 45, "h": 40, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S02", "area": "スロット側", "loc": "通路1 上端", "x": 331, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S03", "area": "スロット側", "loc": "通路2 上端", "x": 460, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S04", "area": "スロット側", "loc": "通路3 上端", "x": 589, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S05", "area": "スロット側", "loc": "通路5 上端", "x": 848, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S06", "area": "スロット側", "loc": "通路1 下端", "x": 331, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S07", "area": "スロット側", "loc": "通路2 下端", "x": 460, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S08", "area": "スロット側", "loc": "通路3 下端", "x": 589, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S09", "area": "スロット側", "loc": "通路4 下端", "x": 719, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S10", "area": "スロット側", "loc": "通路5 下端", "x": 848, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S11", "area": "スロット側", "loc": "右端 柱（上）", "x": 978, "y": 573, "w": 42, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S12", "area": "スロット側", "loc": "右端 柱（下）", "x": 978, "y": 612, "w": 42, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S13", "area": "スロット側", "loc": "通路1 上端", "x": 331, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S14", "area": "スロット側", "loc": "通路2 上端", "x": 460, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S15", "area": "スロット側", "loc": "通路4 上端", "x": 719, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S16", "area": "カウンター付近", "loc": "左壁面（上）", "x": 115, "y": 866, "w": 46, "h": 41, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S17", "area": "カウンター付近", "loc": "左壁面（下）", "x": 115, "y": 924, "w": 46, "h": 41, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S18", "area": "スロット側", "loc": "通路1 下端", "x": 331, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S19", "area": "スロット側", "loc": "通路2 下端", "x": 460, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S20", "area": "スロット側", "loc": "通路3 下端", "x": 589, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S21", "area": "スロット側", "loc": "通路4 下端", "x": 719, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S22", "area": "スロット側", "loc": "通路5 下端", "x": 848, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S23", "area": "連絡通路", "loc": "EV横（左）", "x": 697, "y": 1022, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S24", "area": "連絡通路", "loc": "EV横（右）", "x": 762, "y": 1022, "w": 43, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S25", "area": "パチンコ側", "loc": "EV下（右）", "x": 848, "y": 1140, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S26", "area": "パチンコ側", "loc": "通路1 上端", "x": 331, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S27", "area": "パチンコ側", "loc": "通路2 上端", "x": 460, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S28", "area": "パチンコ側", "loc": "通路3 上端", "x": 589, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S29", "area": "パチンコ側", "loc": "通路4 上端", "x": 719, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S30", "area": "パチンコ側", "loc": "通路6 上端", "x": 956, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S31", "area": "パチンコ側", "loc": "通路1 下端", "x": 331, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S32", "area": "パチンコ側", "loc": "通路2 下端", "x": 460, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S33", "area": "パチンコ側", "loc": "通路3 下端", "x": 589, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S34", "area": "パチンコ側", "loc": "通路5 下端", "x": 848, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S35", "area": "パチンコ側", "loc": "通路6 下端", "x": 977, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": "", "kind": "新設"}, {"id": "S36", "kind": "既存", "area": "スロット側", "loc": "出入口前（左）", "x": 58, "y": 431, "w": 40, "h": 36, "status": "設置済", "size": "", "group": "", "contents": [], "date": "", "note": ""}, {"id": "S37", "kind": "既存", "area": "スロット側", "loc": "出入口前（中）", "x": 117, "y": 431, "w": 40, "h": 36, "status": "設置済", "size": "", "group": "", "contents": [], "date": "", "note": ""}, {"id": "S38", "kind": "既存", "area": "スロット側", "loc": "出入口前（右）", "x": 174, "y": 431, "w": 40, "h": 36, "status": "設置済", "size": "", "group": "", "contents": [], "date": "", "note": ""}, {"id": "S39", "kind": "既存", "area": "スロット側", "loc": "島1左 下端", "x": 195, "y": 553, "w": 40, "h": 36, "status": "設置済", "size": "", "group": "", "contents": [], "date": "", "note": ""}, {"id": "S40", "kind": "既存", "area": "スロット側", "loc": "中段 島1左 上端", "x": 201, "y": 629, "w": 40, "h": 36, "status": "設置済", "size": "", "group": "", "contents": [], "date": "", "note": ""}]}</script>
 <script id="app">
 (function(){
 const HEAD='<!DOCTYPE html>\n<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>サイネージ配置管理（サンプル）</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">';
 const STATUS=[{k:'予定',c:'#8a94a6'},{k:'確定',c:'#2f6fde'},{k:'設置済',c:'#2e9d5b'},{k:'保留',c:'#d99a1e'},{k:'要対応',c:'#d6453d'}];
 const MAXC=3;
 const FREQ=[{k:'高'},{k:'低'}];
-const COLS=[['tab','タブ'],['id','ID'],['area','エリア'],['loc','場所'],['status','状態'],['size','サイズ・機種'],['group','配信グループ']];
+const COLS=[['tab','タブ'],['id','ID'],['kind','種別'],['area','エリア'],['loc','場所'],['status','状態'],['size','サイズ・機種'],['group','配信グループ']];
 for(let n=1;n<=MAXC;n++)COLS.push(['c'+n+'t','掲載内容'+n],['c'+n+'f','更新頻度'+n],['c'+n+'l','最終更新日'+n]);
 COLS.push(['date','設置日'],['note','備考'],['x','X'],['y','Y']);
 const LSK='signage-sample-data-v2';
@@ -139,7 +148,7 @@ if(!S.freqDays)S.freqDays={'高':7,'低':30};
 const OLDF={'毎日':'高','毎週':'高','隔週':'高','毎月':'低','不定期':'低','固定':'低'};
 S.items.forEach(it=>it.contents.forEach(c=>{if(OLDF[c.f])c.f=OLDF[c.f]}));
 if(!Array.isArray(S.plans)||!S.plans.length)S.plans=[{id:'normal',name:'通常営業'},{id:'event',name:'イベント時'}];
-S.items.forEach(it=>{if(!it.cplan)it.cplan={normal:it.contents||[]}});
+S.items.forEach(it=>{if(!it.cplan)it.cplan={normal:it.contents||[]};if(!it.kind)it.kind='新設'});
 let plan='normal';try{const p=localStorage.getItem('sg-plan');if(S.plans.some(x=>x.id===p))plan=p}catch(e){}
 function bindPlan(){S.items.forEach(it=>{if(!it.cplan)it.cplan={};if(!it.cplan[plan])it.cplan[plan]=[];it.contents=it.cplan[plan]})}
 bindPlan();
@@ -188,9 +197,11 @@ function shell(){
 <nav id="tabs"></nav>
 <main>
  <section class="card" id="mapCard">
-  <div id="mapTools"><button id="bEdit">配置を編集</button><button id="bAdd" style="display:none">＋ 追加</button><span class="hint" id="hint">ピンをクリックすると詳細を表示します</span><span class="sp"></span><div class="cmode"><span>色分け</span><button data-cm="content">掲載内容</button><button data-cm="status">状態</button></div></div>
+  <div id="mapTools"><button id="bEdit">配置を編集</button><button id="bAdd" style="display:none">＋ 追加</button><span class="hint" id="hint">ピンをクリックで詳細／右上の＋－・Ctrl＋ホイール・ピンチで拡大</span><span class="sp"></span><div class="cmode"><span>色分け</span><button data-cm="content">掲載内容</button><button data-cm="status">状態</button></div></div>
   <div id="legend" style="display:none"></div>
   <svg id="map" viewBox="-70 70 1230 1640" xmlns="http://www.w3.org/2000/svg"><g id="static">${staticMap()}</g><g id="pins"></g></svg>
+  <div id="exLegend"><span class="exsw"></span>破線の枠＝既存サイネージ</div>
+  <div id="zoomBar"><button id="zIn" title="拡大">＋</button><span id="zl">100%</span><button id="zOut" title="縮小">－</button><button id="zFit">全体</button><button id="zFull">全画面</button></div>
   <div id="tip"></div>
  </section>
  <aside>
@@ -237,7 +248,7 @@ function drawPins(){
       if(!cs.length)body=`<rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="${NONE}"/>`;
       else{const sw=W/cs.length;body=`<clipPath id="cp${i}"><rect x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6"/></clipPath><g clip-path="url(#cp${i})">${cs.map((c,j)=>`<rect class="sg" x="${x0+j*sw}" y="${y0}" width="${sw+.5}" height="${H}" fill="${ccol(c.t)}"/>`).join('')}</g><rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="none"/>`}}
     else body=`<rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="${col(it.status)}"/>`;
-    return `<g class="pin${visible(it)?'':' dim'}${sel===it.id?' sel':''}${cmode==='content'?' cm'+(it.contents.length?'':' empty'):''}" data-id="${esc(it.id)}">${body}<text x="${cx}" y="${cy}">${esc(String(it.id).replace(/^S/,''))}</text>${lateCount(it)?`<circle class="late" cx="${cx+W/2-2}" cy="${cy-H/2+2}" r="9"/>`:''}</g>`}).join('');
+    return `<g class="pin${it.kind==='既存'?' ex':''}${visible(it)?'':' dim'}${sel===it.id?' sel':''}${cmode==='content'?' cm'+(it.contents.length?'':' empty'):''}" data-id="${esc(it.id)}">${body}<text x="${cx}" y="${cy}">${esc(String(it.id).replace(/^S/,''))}</text>${lateCount(it)?`<circle class="late" cx="${cx+W/2-2}" cy="${cy-H/2+2}" r="9"/>`:''}</g>`}).join('');
   drawLegend();
 }
 function drawLegend(){const L=$('#legend');if(cmode!=='content'){L.style.display='none';return}L.style.display='';
@@ -249,6 +260,8 @@ function drawCounts(){
   STATUS.forEach(s=>{const n=S.items.filter(i=>i.status===s.k).length;h+=`<div class="cnt${hidden.has(s.k)?' off':''}" data-k="${s.k}"><div class="n">${n}</div><div class="k"><span class="dot" style="background:${s.c}"></span>${s.k}</div></div>`});
   const late=S.items.filter(i=>lateCount(i)).length,full=S.items.filter(i=>i.contents.length>=MAXC).length;
   h+=`<div class="cnt wide${onlyLate?' on':''}" data-late="1"><div class="k"><span class="dot" style="background:#d6453d"></span>更新遅れ</div><div class="n">${late}<small> 台</small></div></div>`;
+  const exn=S.items.filter(i=>i.kind==='既存').length;
+  h+=`<div class="cnt wide info"><div class="k"><span class="exsw"></span>うち既存サイネージ</div><div class="n">${exn}<small> 台</small></div></div>`;
   h+=`<div class="cnt wide info"><div class="k">掲載が上限（${MAXC}件）</div><div class="n">${full}<small> 台</small></div></div>`;
   h+=`<div class="fset">更新の目安　頻度高 <input type="number" min="1" data-fd="高" value="${S.freqDays['高']}"> 日／頻度低 <input type="number" min="1" data-fd="低" value="${S.freqDays['低']}"> 日</div>`;
   $('#counts').innerHTML=h;
@@ -258,13 +271,14 @@ function stateHtml(c){const d=due(c);if(!d)return '';
   if(d.state==='late')return `<span class="st late">${d.days}日遅れ</span>`;
   return `<span class="st ok">次回 ${fmt(d.next)}</span>`}
 function drawTable(){
-  $('#tb').innerHTML=S.items.filter(visible).map(it=>`<tr data-id="${esc(it.id)}" class="${sel===it.id?'sel':''}"><td><b>${esc(it.id)}</b></td><td>${esc(it.area)}</td><td>${esc(it.loc)}</td><td><span class="badge"><span class="dot" style="background:${col(it.status)}"></span>${esc(it.status)}</span></td><td>${esc(it.group)}</td><td class="cn">${it.contents.length}/${MAXC}</td><td>${it.contents.map(c=>`<div class="cl"><span class="sw" style="background:${ccol(c.t)}"></span><span>${esc(c.t)||'（未入力）'}</span>${c.f?`<span class="fq f${c.f==='高'?'h':'l'}">頻度${esc(c.f)}</span>`:''}${stateHtml(c)}</div>`).join('')}</td><td>${esc(it.size)}</td><td>${esc(it.note)}</td></tr>`).join('')||`<tr><td colspan="9" class="empty">該当するサイネージはありません</td></tr>`;
+  $('#tb').innerHTML=S.items.filter(visible).map(it=>`<tr data-id="${esc(it.id)}" class="${sel===it.id?'sel':''}"><td><b>${esc(it.id)}</b>${it.kind==='既存'?' <span class="exb">既存</span>':''}</td><td>${esc(it.area)}</td><td>${esc(it.loc)}</td><td><span class="badge"><span class="dot" style="background:${col(it.status)}"></span>${esc(it.status)}</span></td><td>${esc(it.group)}</td><td class="cn">${it.contents.length}/${MAXC}</td><td>${it.contents.map(c=>`<div class="cl"><span class="sw" style="background:${ccol(c.t)}"></span><span>${esc(c.t)||'（未入力）'}</span>${c.f?`<span class="fq f${c.f==='高'?'h':'l'}">頻度${esc(c.f)}</span>`:''}${stateHtml(c)}</div>`).join('')}</td><td>${esc(it.size)}</td><td>${esc(it.note)}</td></tr>`).join('')||`<tr><td colspan="9" class="empty">該当するサイネージはありません</td></tr>`;
 }
 function drawForm(){
   const it=S.items.find(i=>i.id===sel);const f=$('#form');
   if(!it){f.innerHTML=`<h2>詳細</h2><p class="empty">地図のピンか台帳の行をクリックすると、ここで状態・掲載内容・更新頻度などを編集できます。<br>「配置を編集」でピンの移動・追加・削除ができます。</p>`;return}
   f.innerHTML=`<div id="formHead"><span class="big">${esc(it.id)}</span><span>${edit?'<button class="danger" id="bDel">削除</button>':''} <button id="bClose">閉じる</button></span></div>
   <div class="row"><label>状態</label><div class="seg">${STATUS.map(s=>`<button data-st="${s.k}" class="${it.status===s.k?'cur':''}"><span class="dot" style="background:${s.c}"></span>${s.k}</button>`).join('')}</div></div>
+  <div class="row"><label>種別</label><div class="seg">${['新設','既存'].map(k=>`<button data-kind="${k}" class="${it.kind===k?'cur':''}">${k==='既存'?'既存サイネージ':'新設'}</button>`).join('')}</div></div>
   <div class="two row"><div><label>ID</label><input data-f="id" value="${esc(it.id)}"></div><div><label>エリア</label><input data-f="area" value="${esc(it.area)}"></div></div>
   <div class="row"><label>場所</label><input data-f="loc" value="${esc(it.loc)}"></div>
   <div class="row"><label>サイズ・機種</label><input data-f="size" value="${esc(it.size)}" placeholder="例：43インチ 縦置き"></div>
@@ -300,7 +314,8 @@ function bind(){
   const f=$('#form');
   f.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b)return;const it=S.items.find(i=>i.id===sel);
-    if(b.dataset.st&&it){it.status=b.dataset.st;setDirty(true);all()}
+    if(b.dataset.kind&&it){it.kind=b.dataset.kind;setDirty(true);all()}
+    else if(b.dataset.st&&it){it.status=b.dataset.st;setDirty(true);all()}
     else if(b.id==='bClose')select(null);
     else if(b.id==='cAdd'&&it){if(it.contents.length>=MAXC){toast('掲載内容は最大'+MAXC+'件までです');return}it.contents.push({t:'',f:'',l:''});setDirty(true);all();const ins=f.querySelectorAll('input[data-cf="t"]');ins[ins.length-1].focus()}
     else if(b.dataset.pre!=null&&it){if(it.contents.length>=MAXC){toast('掲載内容は最大'+MAXC+'件までです');return}it.contents.push({t:b.dataset.pre,f:'',l:''});setDirty(true);all()}
@@ -319,17 +334,41 @@ function bind(){
     setDirty(true);drawPins();drawTable();drawCounts()});
   $('#bEdit').addEventListener('click',()=>{edit=!edit;adding=false;document.body.classList.toggle('edit',edit);document.body.classList.remove('adding');
     $('#bEdit').classList.toggle('on',edit);$('#bEdit').textContent=edit?'編集を終了':'配置を編集';$('#bAdd').style.display=edit?'':'none';$('#bAdd').classList.remove('on');
-    $('#hint').textContent=edit?'ピンをドラッグで移動／「＋追加」→地図をクリックで新規配置':'ピンをクリックすると詳細を表示します';drawForm()});
+    $('#hint').textContent=edit?'ピンをドラッグで移動／「＋追加」→地図をクリックで新規配置':'ピンをクリックで詳細／右上の＋－・Ctrl＋ホイール・ピンチで拡大';drawForm()});
   $('#bAdd').addEventListener('click',()=>{adding=!adding;document.body.classList.toggle('adding',adding);$('#bAdd').classList.toggle('on',adding);$('#hint').textContent=adding?'置きたい場所をクリックしてください':'ピンをドラッグで移動／「＋追加」→地図をクリックで新規配置'});
   const svg=$('#map'),tip=$('#tip');
   const pt=e=>{const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())};
   let drag=null;
+  // ---- zoom & pan ----
+  const VB0={x:-70,y:70,w:1230,h:1640};let vb={...VB0};const ptrs=new Map();let pan=null,pinch=null;
+  const setVB=()=>{svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);$('#zl').textContent=Math.round(VB0.w/vb.w*100)+'%';svg.classList.toggle('zoomed',vb.w<VB0.w-1)};
+  const clampVB=()=>{vb.x=Math.min(Math.max(vb.x,VB0.x),VB0.x+VB0.w-vb.w);vb.y=Math.min(Math.max(vb.y,VB0.y),VB0.y+VB0.h-vb.h)};
+  const toSvg=(cx,cy)=>{const p=svg.createSVGPoint();p.x=cx;p.y=cy;return p.matrixTransform(svg.getScreenCTM().inverse())};
+  function zoomAt(f,cx,cy){const p=toSvg(cx,cy);let nw=Math.min(VB0.w,Math.max(VB0.w/6,vb.w/f));const k=nw/vb.w;
+    vb.x=p.x-(p.x-vb.x)*k;vb.y=p.y-(p.y-vb.y)*k;vb.w=nw;vb.h=vb.h*k;clampVB();setVB()}
+  const center=()=>{const r=svg.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]};
+  function startPan(e){if(vb.w>=VB0.w-1)return;pan={x:e.clientX,y:e.clientY,vx:vb.x,vy:vb.y,a:svg.getScreenCTM().a};svg.setPointerCapture(e.pointerId);svg.classList.add('panning')}
+  svg.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+    if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1])};pan=null;drag=null}},true);
+  svg.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+    if(pinch&&ptrs.size===2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(d>0&&pinch.d>0){zoomAt(d/pinch.d,(a[0]+b[0])/2,(a[1]+b[1])/2);pinch.d=d}e.stopImmediatePropagation();return}
+    if(pan){vb.x=pan.vx-(e.clientX-pan.x)/pan.a;vb.y=pan.vy-(e.clientY-pan.y)/pan.a;clampVB();setVB();e.stopImmediatePropagation()}},true);
+  const ptrEnd=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=null;if(!ptrs.size){pan=null;svg.classList.remove('panning')}};
+  svg.addEventListener('pointerup',ptrEnd,true);svg.addEventListener('pointercancel',ptrEnd,true);
+  svg.addEventListener('wheel',e=>{if(!(e.ctrlKey||e.metaKey||vb.w<VB0.w-1))return;e.preventDefault();zoomAt(Math.exp(-Math.max(-150,Math.min(150,e.deltaY))*(e.ctrlKey?0.004:0.002)),e.clientX,e.clientY)},{passive:false});
+  svg.addEventListener('dblclick',e=>{if(e.target.closest('.pin'))return;zoomAt(2,e.clientX,e.clientY)});
+  $('#zIn').addEventListener('click',()=>zoomAt(1.5,...center()));
+  $('#zOut').addEventListener('click',()=>zoomAt(1/1.5,...center()));
+  $('#zFit').addEventListener('click',()=>{vb={...VB0};setVB()});
+  $('#zFull').addEventListener('click',()=>{const c=$('#mapCard');try{if(document.fullscreenElement)document.exitFullscreen();else if(c.requestFullscreen)c.requestFullscreen().catch(()=>toast('全画面にできませんでした'));else toast('このブラウザは全画面に対応していません')}catch(err){toast('全画面にできませんでした')}});
+  document.addEventListener('fullscreenchange',()=>{$('#zFull').textContent=document.fullscreenElement?'全画面を終了':'全画面'});
+  setVB();
   svg.addEventListener('pointerdown',e=>{
     const g=e.target.closest('.pin');
     if(adding&&!g){const p=pt(e);let n=1;while(S.items.some(i=>i.id==='S'+String(n).padStart(2,'0')))n++;
       const it={id:'S'+String(n).padStart(2,'0'),area:'',loc:'',x:Math.round(p.x-20),y:Math.round(p.y-18),w:40,h:36,status:'予定',size:'',content:'',date:'',note:''};
-      it.group='';it.contents=[];it.cplan={[plan]:it.contents};delete it.content;S.items.push(it);adding=false;document.body.classList.remove('adding');$('#bAdd').classList.remove('on');setDirty(true);select(it.id);return}
-    if(!g)return;const it=S.items.find(i=>i.id===g.dataset.id);
+      it.kind='新設';it.group='';it.contents=[];it.cplan={[plan]:it.contents};delete it.content;S.items.push(it);adding=false;document.body.classList.remove('adding');$('#bAdd').classList.remove('on');setDirty(true);select(it.id);return}
+    if(!g){startPan(e);return}const it=S.items.find(i=>i.id===g.dataset.id);
     if(edit){const p=pt(e);drag={it,dx:p.x-it.x,dy:p.y-it.y,moved:false};svg.setPointerCapture(e.pointerId)}
     select(it.id)});
   svg.addEventListener('pointermove',e=>{
@@ -394,7 +433,8 @@ function importText(txt){
       const c={t:g('t'),f:FREQ.some(x=>x.k===g('f'))?g('f'):'',l:/^\d{4}[-/]\d{1,2}[-/]\d{1,2}$/.test(g('l'))?g('l').replace(/\//g,'-').replace(/-(\d)(?=-|$)/g,'-0$1'):''};if(c.t||c.f||c.l)cs.push(c)}it.cplan[pid]=cs}
     COLS.forEach(([k])=>{if(k==='id'||k==='tab'||/^c\d/.test(k)||idx[k]==null)return;let v=(r[idx[k]]||'').trim();
       if(k==='x'||k==='y'){const n=parseFloat(v);if(!isNaN(n))it[k]=n;return}
-      if(k==='status'&&!STATUS.some(s=>s.k===v))v=it.status;it[k]=v})});
+      if(k==='status'&&!STATUS.some(s=>s.k===v))v=it.status;
+      if(k==='kind'&&v!=='既存')v='新設';it[k]=v})});
   bindPlan();setDirty(true);all();return `${up}件を更新、${ad}件を追加しました`}
 
 async function save(){
