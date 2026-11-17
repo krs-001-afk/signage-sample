@@ -141,7 +141,7 @@ const FREQ=[{k:'高'},{k:'低'}];
 const COLS=[['tab','タブ'],['id','ID'],['kind','種別'],['area','エリア'],['loc','場所'],['status','状態'],['size','サイズ・機種'],['group','配信グループ']];
 for(let n=1;n<=MAXC;n++)COLS.push(['c'+n+'t','掲載内容'+n],['c'+n+'f','更新頻度'+n],['c'+n+'l','最終更新日'+n]);
 COLS.push(['date','設置日'],['note','備考'],['x','X'],['y','Y']);
-const LSK='signage-sample-data-v2';
+const LSK='signage-sample-data-v3';
 const S=(()=>{try{const v=localStorage.getItem(LSK);if(v)return JSON.parse(v)}catch(e){}return JSON.parse(document.getElementById('data').textContent)})();
 S.items.forEach(it=>{if(!Array.isArray(it.contents)){it.contents=it.content?[{t:it.content,f:'',l:''}]:[]}delete it.content;if(it.group==null)it.group='';if(it.contents.length>MAXC)it.contents.length=MAXC});
 if(!S.freqDays)S.freqDays={'高':7,'低':30};
