@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>サイネージ配置管理（サンプル）</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style id="css">
+:root{--bg:#f4f5f7;--card:#fff;--ink:#1d2330;--sub:#6b7385;--line:#e2e5eb;--acc:#2f6fde;--island:#fafbfc;--islandLine:#9aa3b2}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans JP",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 20px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header h1{font-size:17px;margin:0;font-weight:700}
+#store{border:1px solid transparent;border-radius:6px;padding:4px 8px;font:inherit;font-size:14px;color:var(--sub);width:200px;background:transparent}
+#store:hover,#store:focus{border-color:var(--line);background:#fff;outline:none}
+.sp{flex:1}
+.sample{font-size:11px;background:#fff6e0;color:#8a5a00;border:1px solid #f1d9a0;border-radius:12px;padding:2px 9px}
+.filebtn{font-size:13px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 12px;cursor:pointer}.filebtn:hover{background:#f0f2f6}
+#saveState{font-size:12px;color:var(--sub)}
+#saveState.dirty{color:#c4471f;font-weight:500}
+button{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:7px;padding:6px 12px;cursor:pointer}
+button:hover{background:#f0f2f6}
+button.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+button.primary:hover{background:#255bc0}
+button:disabled{opacity:.45;cursor:default}
+button.on{background:#1d2330;color:#fff;border-color:#1d2330}
+#tabs{display:flex;align-items:flex-end;gap:4px;padding:12px 20px 0;max-width:1500px;margin:0 auto;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+button.tab{border-radius:9px 9px 0 0;border-bottom:none;padding:8px 18px;font-size:14px;background:#e9ecf1;color:var(--sub);margin-bottom:-1px}
+button.tab.cur{background:var(--bg);color:var(--ink);font-weight:700;border-color:var(--line);box-shadow:inset 0 3px 0 var(--acc)}
+button.tab.add{background:transparent;border:1px dashed var(--line);border-radius:9px;color:var(--acc);margin-bottom:6px;padding:5px 12px;font-size:13px}
+#tabName{font:inherit;font-size:14px;padding:7px 10px;border:2px solid var(--acc);border-radius:9px 9px 0 0;width:150px;outline:none}
+.tabact{display:flex;gap:6px;padding-bottom:6px}.tabact button{font-size:12px;padding:5px 10px}
+.ptag{display:inline-block;font-size:11px;background:#eaf1fd;color:#22509f;border-radius:10px;padding:0 7px;margin:0 2px}
+main{display:grid;align-items:start;grid-template-columns:minmax(0,1fr) 360px;gap:16px;padding:16px 20px;max-width:1500px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px}
+#mapCard{padding:10px;position:relative}
+#mapTools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:2px 4px 8px}
+#mapTools .hint{font-size:12px;color:var(--sub)}
+svg#map{width:100%;height:auto;display:block;max-height:calc(100vh - 150px);touch-action:none}
+.isl{fill:var(--island);stroke:var(--islandLine);stroke-width:2}
+.mid{stroke:var(--islandLine);stroke-width:1.2}
+.aisle{font-size:26px;fill:#b3b9c4;text-anchor:middle;dominant-baseline:middle;font-weight:500}
+.lbl{font-size:20px;fill:var(--sub);text-anchor:middle;dominant-baseline:middle}
+.wall{stroke:#5b6475;stroke-width:3;fill:none}path.wall{fill:#f7f8fa}.area{fill:#3b4352;font-weight:500}
+.zone{font-size:22px;fill:#9aa3b2;font-weight:700;letter-spacing:.1em}
+.pin rect.bd{stroke:#fff;stroke-width:2.5;cursor:pointer}.pin rect.sg{stroke:none;cursor:pointer}
+.pin.cm text{paint-order:stroke;stroke:rgba(0,0,0,.45);stroke-width:4px}.pin.cm.empty text{fill:#6b7385;stroke:none}
+.cmode{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden}.cmode span{font-size:12px;color:var(--sub);padding:0 8px}
+.cmode button{border:none;border-left:1px solid var(--line);border-radius:0;padding:6px 12px}.cmode button.on{background:#1d2330;color:#fff}
+#legend{display:flex;flex-wrap:wrap;gap:6px;padding:0 4px 8px;align-items:center}
+button.lg{display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 10px;border-radius:14px}button.lg b{color:var(--sub);font-weight:500}
+button.lg.on{background:#eef1f6;color:var(--ink);border-color:#1d2330;box-shadow:0 0 0 1px #1d2330 inset}button.lg.clr{color:var(--acc)}.lgh{font-size:11px;color:var(--sub)}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
+.pin text{font-size:20px;fill:#fff;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.pin.dim{opacity:.18}
+.pin.sel rect.bd{stroke:#1d2330;stroke-width:5}
+.edit .pin rect{cursor:move!important}
+.adding svg#map{cursor:crosshair}
+#tip{position:absolute;pointer-events:none;background:#1d2330;color:#fff;font-size:12px;padding:5px 8px;border-radius:6px;display:none;white-space:nowrap;z-index:3}
+aside{display:flex;flex-direction:column;gap:16px}
+.sec{padding:14px 16px}
+.sec h2{font-size:13px;margin:0 0 10px;color:var(--sub);font-weight:500}
+#counts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cnt{border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;user-select:none}
+.cnt .n{font-size:20px;font-weight:700;line-height:1.2}
+.cnt .k{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:5px}
+.cnt.off{opacity:.35}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.cnt.total{background:#f7f8fa;cursor:default}
+.cnt.wide{grid-column:span 3;display:flex;align-items:center;justify-content:space-between;padding:7px 10px}
+.cnt.wide .n{font-size:17px}.cnt.wide small{font-size:12px;font-weight:400;color:var(--sub)}
+.cnt.wide.on{border-color:#d6453d;background:#fdf1f0}.cnt.info{cursor:default;background:#f7f8fa}
+.pin circle.late{fill:#d6453d;stroke:#fff;stroke-width:3;pointer-events:none}
+.cbox{border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:8px;background:#fafbfc}
+.chead{display:flex;gap:6px;align-items:center}.chead b{width:18px;text-align:center;color:var(--sub)}
+.chead input{flex:1}
+button.x{padding:4px 9px;color:var(--sub)}
+.cgrid{display:grid;grid-template-columns:1fr 1.2fr auto;gap:6px;margin-top:6px}
+.cgrid select,.cgrid input{font:inherit;font-size:13px!important;border:1px solid var(--line);border-radius:7px;padding:6px 6px!important;background:#fff;min-width:0}
+.cgrid button{font-size:12px;padding:5px 8px;white-space:nowrap}
+.cstate{font-size:12px;color:var(--sub);margin-top:5px;min-height:16px}
+.pre{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0 8px}.pre span{font-size:12px;color:var(--sub);margin-right:2px}
+button.chip{font-size:12px;padding:4px 10px;border-radius:14px;background:#eef3fd;border-color:#cfdcf7;color:#22509f}
+button.chip:hover{background:#e0eafb}button.chip:disabled{background:#f3f4f6;border-color:var(--line);color:#a0a6b2}
+button.chip.edit{background:#fff;border-style:dashed;color:var(--sub)}
+.addc{width:100%;border-style:dashed;color:var(--acc)}
+.limit{font-size:12px;color:var(--sub);text-align:center;padding:8px;border:1px dashed var(--line);border-radius:8px}
+.st{font-size:11px;padding:1px 6px;border-radius:10px;white-space:nowrap}
+.st.late{background:#fde5e3;color:#b8322b;font-weight:700}.st.ok{background:#e7f4ec;color:#23794a}.st.none{background:#f0f1f4;color:var(--sub)}
+.fset{grid-column:span 3;font-size:12px;color:var(--sub);padding:4px 2px 0}.fset input{width:48px;font:inherit;font-size:12px;border:1px solid var(--line);border-radius:6px;padding:3px 5px;margin:0 2px}
+.fq.fh{background:#fff3e6;border-color:#f3cfa5;color:#a35a00}.fq.fl{background:#f3f4f6}
+.fq{font-size:11px;color:var(--sub);border:1px solid var(--line);border-radius:10px;padding:0 6px;white-space:nowrap}
+.cl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:1px 0}
+td.cn{color:var(--sub);white-space:nowrap}
+#form .row{margin-bottom:10px}
+#form label{display:block;font-size:12px;color:var(--sub);margin-bottom:3px}
+#form input:not(.cgrid input),#form textarea{width:100%;font:inherit;font-size:14px;border:1px solid var(--line);border-radius:7px;padding:7px 9px;background:#fff;color:var(--ink)}
+#form input:focus,#form textarea:focus{outline:2px solid #c9d8f7;border-color:var(--acc)}
+#form textarea{min-height:64px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{padding:5px 9px;font-size:12px;display:flex;align-items:center;gap:5px}
+.seg button.cur{border-color:var(--ink);font-weight:700}
+#formHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#formHead .big{font-size:20px;font-weight:700}
+.empty{color:var(--sub);font-size:13px;line-height:1.7}
+button.danger{color:#c43a32}
+#tableCard{grid-column:1/-1;padding:0;overflow:hidden}
+#tableHead{display:flex;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+#tableHead h2{font-size:14px;margin:0}
+#q{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:7px;padding:6px 10px;width:220px}
+.tw{overflow:auto;max-height:520px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{position:sticky;top:0;background:#f7f8fa;text-align:left;font-weight:500;color:var(--sub);padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid #eef0f3;vertical-align:top}
+tr{cursor:pointer}
+tbody tr:hover{background:#f7f9fd}
+tr.sel{background:#eaf1fd}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap}
+.modal{position:fixed;inset:0;background:rgba(20,24,33,.45);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.modal.open{display:flex}
+.mbox{background:#fff;border-radius:12px;padding:18px 20px;width:min(640px,100%);max-height:90vh;overflow:auto}
+.mbox h3{margin:0 0 8px;font-size:16px}
+.mbox p{font-size:13px;color:var(--sub);margin:0 0 10px;line-height:1.7}
+.mbox textarea{width:100%;min-height:220px;font-family:ui-monospace,monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:8px}
+.mact{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1d2330;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;display:none;z-index:30}
+@media (max-width:900px){main{grid-template-columns:1fr;padding:12px}header{padding:10px 12px}#store{width:140px}}
+</style></head><body>
+<script id="data" type="application/json">{"store": "", "updatedAt": "", "items": [{"id": "S01", "area": "上段", "loc": "EV前", "x": 805, "y": 141, "w": 45, "h": 40, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S02", "area": "スロット側", "loc": "通路1 上端", "x": 331, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S03", "area": "スロット側", "loc": "通路2 上端", "x": 460, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S04", "area": "スロット側", "loc": "通路3 上端", "x": 589, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S05", "area": "スロット側", "loc": "通路5 上端", "x": 848, "y": 239, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S06", "area": "スロット側", "loc": "通路1 下端", "x": 331, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S07", "area": "スロット側", "loc": "通路2 下端", "x": 460, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S08", "area": "スロット側", "loc": "通路3 下端", "x": 589, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S09", "area": "スロット側", "loc": "通路4 下端", "x": 719, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S10", "area": "スロット側", "loc": "通路5 下端", "x": 848, "y": 552, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S11", "area": "スロット側", "loc": "右端 柱（上）", "x": 978, "y": 573, "w": 42, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S12", "area": "スロット側", "loc": "右端 柱（下）", "x": 978, "y": 612, "w": 42, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S13", "area": "スロット側", "loc": "通路1 上端", "x": 331, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S14", "area": "スロット側", "loc": "通路2 上端", "x": 460, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S15", "area": "スロット側", "loc": "通路4 上端", "x": 719, "y": 631, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S16", "area": "カウンター付近", "loc": "左壁面（上）", "x": 115, "y": 866, "w": 46, "h": 41, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S17", "area": "カウンター付近", "loc": "左壁面（下）", "x": 115, "y": 924, "w": 46, "h": 41, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S18", "area": "スロット側", "loc": "通路1 下端", "x": 331, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S19", "area": "スロット側", "loc": "通路2 下端", "x": 460, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S20", "area": "スロット側", "loc": "通路3 下端", "x": 589, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S21", "area": "スロット側", "loc": "通路4 下端", "x": 719, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S22", "area": "スロット側", "loc": "通路5 下端", "x": 848, "y": 964, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S23", "area": "連絡通路", "loc": "EV横（左）", "x": 697, "y": 1022, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S24", "area": "連絡通路", "loc": "EV横（右）", "x": 762, "y": 1022, "w": 43, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S25", "area": "パチンコ側", "loc": "EV下（左）", "x": 783, "y": 1140, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S26", "area": "パチンコ側", "loc": "EV下（右）", "x": 848, "y": 1140, "w": 45, "h": 38, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S27", "area": "パチンコ側", "loc": "通路1 上端", "x": 331, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S28", "area": "パチンコ側", "loc": "通路2 上端", "x": 460, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S29", "area": "パチンコ側", "loc": "通路3 上端", "x": 589, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S30", "area": "パチンコ側", "loc": "通路4 上端", "x": 719, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S31", "area": "パチンコ側", "loc": "通路6 上端", "x": 956, "y": 1238, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S32", "area": "パチンコ側", "loc": "通路1 下端", "x": 331, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S33", "area": "パチンコ側", "loc": "通路2 下端", "x": 460, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S34", "area": "パチンコ側", "loc": "通路3 下端", "x": 589, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S35", "area": "パチンコ側", "loc": "通路5 下端", "x": 848, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}, {"id": "S36", "area": "パチンコ側", "loc": "通路6 下端", "x": 977, "y": 1649, "w": 40, "h": 36, "status": "予定", "size": "", "content": "", "date": "", "note": ""}]}</script>
+<script id="app">
+(function(){
+const HEAD='<!DOCTYPE html>\n<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>サイネージ配置管理（サンプル）</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">';
+const STATUS=[{k:'予定',c:'#8a94a6'},{k:'確定',c:'#2f6fde'},{k:'設置済',c:'#2e9d5b'},{k:'保留',c:'#d99a1e'},{k:'要対応',c:'#d6453d'}];
+const MAXC=3;
+const FREQ=[{k:'高'},{k:'低'}];
+const COLS=[['tab','タブ'],['id','ID'],['area','エリア'],['loc','場所'],['status','状態'],['size','サイズ・機種'],['group','配信グループ']];
+for(let n=1;n<=MAXC;n++)COLS.push(['c'+n+'t','掲載内容'+n],['c'+n+'f','更新頻度'+n],['c'+n+'l','最終更新日'+n]);
+COLS.push(['date','設置日'],['note','備考'],['x','X'],['y','Y']);
+const LSK='signage-sample-data';
+const S=(()=>{try{const v=localStorage.getItem(LSK);if(v)return JSON.parse(v)}catch(e){}return JSON.parse(document.getElementById('data').textContent)})();
+S.items.forEach(it=>{if(!Array.isArray(it.contents)){it.contents=it.content?[{t:it.content,f:'',l:''}]:[]}delete it.content;if(it.group==null)it.group='';if(it.contents.length>MAXC)it.contents.length=MAXC});
+if(!S.freqDays)S.freqDays={'高':7,'低':30};
+const OLDF={'毎日':'高','毎週':'高','隔週':'高','毎月':'低','不定期':'低','固定':'低'};
+S.items.forEach(it=>it.contents.forEach(c=>{if(OLDF[c.f])c.f=OLDF[c.f]}));
+if(!Array.isArray(S.plans)||!S.plans.length)S.plans=[{id:'normal',name:'通常営業'},{id:'event',name:'イベント時'}];
+S.items.forEach(it=>{if(!it.cplan)it.cplan={normal:it.contents||[]}});
+let plan='normal';try{const p=localStorage.getItem('sg-plan');if(S.plans.some(x=>x.id===p))plan=p}catch(e){}
+function bindPlan(){S.items.forEach(it=>{if(!it.cplan)it.cplan={};if(!it.cplan[plan])it.cplan[plan]=[];it.contents=it.cplan[plan]})}
+bindPlan();
+const planName=id=>(S.plans.find(p=>p.id===id)||{}).name||'';
+let tabConfirm=null,renaming=false;
+if(!Array.isArray(S.presets))S.presets=['新台入替','機種訴求','オススメ','イベント'];
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const fmt=d=>(d.getMonth()+1)+'/'+d.getDate();
+function due(c){const days=+S.freqDays[c.f];if(!days)return null;if(!c.l)return {state:'none'};
+  const n=new Date(c.l+'T00:00:00');n.setDate(n.getDate()+days);const diff=Math.round((today()-n)/864e5);
+  return diff>0?{state:'late',days:diff,next:n}:{state:'ok',next:n,days:-diff}}
+const lateCount=it=>it.contents.filter(c=>{const d=due(c);return d&&d.state==='late'}).length;
+let onlyLate=false;
+function getv(it,k,pid){pid=pid||plan;if(k==='tab')return planName(pid);const m=/^c(\d)([tfl])$/.exec(k);if(m){const c=(it.cplan[pid]||[])[m[1]-1];return c?c[m[2]]:''}return it[k]}
+let sel=null,dirty=false,edit=false,adding=false,hidden=new Set(),q='',art=null,dl=null;
+const $=s=>document.querySelector(s);
+const col=k=>(STATUS.find(s=>s.k===k)||STATUS[0]).c;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const ISL=(x1,x2,y1,y2,mid)=>`<rect class="isl" x="${x1}" y="${y1}" width="${x2-x1}" height="${y2-y1}" rx="3"/>`+(mid?`<line class="mid" x1="${(x1+x2)/2}" x2="${(x1+x2)/2}" y1="${y1}" y2="${y2}"/>`:'');
+function staticMap(){
+  let h='';
+  const tm=[[223,267,0],[310,397,1],[440,526,1],[569,655,1],[698,784,1],[827,914,1],[957,1000,0]];
+  [[298,534],[689,925]].forEach(([a,b])=>tm.forEach(([x1,x2,m])=>h+=ISL(x1,x2,a,b,m)));
+  const bm=[[223,267,0],[310,397,1],[440,526,1],[569,655,1],[698,784,1],[827,914,1],[957,1043,1],[1086,1143,0]];
+  bm.forEach(([x1,x2,m])=>h+=ISL(x1,x2,1297,1630,m));
+  [289,418,547,677,806,935].forEach((x,i)=>{h+=`<text class="aisle" x="${x}" y="416">${i+1}</text><text class="aisle" x="${x}" y="807">${i+1}</text>`});
+  [289,418,547,677,806,935,1064].forEach((x,i)=>h+=`<text class="aisle" x="${x}" y="1463">${i+1}</text>`);
+  h+=`<rect x="826" y="82" width="89" height="40" rx="4" fill="#eef0f4" stroke="#9aa3b2" stroke-width="2"/><text class="lbl" x="870" y="103">EV</text>`;
+  h+=`<rect x="806" y="1022" width="87" height="40" rx="4" fill="#eef0f4" stroke="#9aa3b2" stroke-width="2"/><text class="lbl" x="850" y="1043">EV</text>`;
+  h+=`<rect x="974" y="569" width="50" height="86" rx="3" fill="none" stroke="#9aa3b2" stroke-width="2" stroke-dasharray="5 4"/>`;
+  h+=`<circle cx="869" cy="1204" r="20" fill="#eef0f4" stroke="#9aa3b2" stroke-width="2"/>`;
+  h+=`<rect x="230" y="1035" width="406" height="126" rx="3" fill="#f7f8fa" stroke="#9aa3b2" stroke-width="2"/><text class="lbl" x="258" y="1018">清算</text>`;
+  h+=`<rect x="517" y="1053" width="110" height="99" rx="3" fill="#eef0f4" stroke="#9aa3b2" stroke-width="2"/><text class="lbl" x="572" y="1103">WC</text>`;
+  h+=`<rect x="-50" y="380" width="95" height="90" rx="4" fill="#eef0f4" stroke="#9aa3b2" stroke-width="2"/><text class="lbl" x="-2" y="425">出入口</text>`;
+  h+=`<rect x="-50" y="532" width="136" height="135" rx="4" fill="#eef0f4" stroke="#9aa3b2" stroke-width="2"/><text class="lbl" x="18"><tspan x="18" y="566">喫</tspan><tspan x="18" y="599">煙</tspan><tspan x="18" y="632">所</tspan></text>`;
+  h+=`<rect x="-50" y="705" width="129" height="310" rx="4" fill="#eef0f4" stroke="#9aa3b2" stroke-width="2"/><text class="lbl" x="14">${[...'カウンター'].map((c,i)=>`<tspan x="14" y="${790+i*33}">${c}</tspan>`).join('')}</text>`;
+  h+=`<text class="zone" x="96" y="282">スロット側</text><text class="zone" x="96" y="1282">パチンコ側</text>`;
+  return h;
+}
+
+function shell(){
+  document.body.insertAdjacentHTML('afterbegin',`
+<header><h1>サイネージ配置管理</h1><input id="store" placeholder="店舗名を入力" aria-label="店舗名"><div class="sp"></div>
+<span class="sample">サンプル版：データはこのブラウザ内に保存されます</span><span id="saveState"></span><button id="bJsonOut">データを書き出す</button><label class="filebtn">データを読み込む<input type="file" id="jsonIn" accept=".json,application/json" hidden></label><button id="bReset">初期状態に戻す</button><button id="bSave" class="primary" disabled>保存</button></header>
+<nav id="tabs"></nav>
+<main>
+ <section class="card" id="mapCard">
+  <div id="mapTools"><button id="bEdit">配置を編集</button><button id="bAdd" style="display:none">＋ 追加</button><span class="hint" id="hint">ピンをクリックすると詳細を表示します</span><span class="sp"></span><div class="cmode"><span>色分け</span><button data-cm="content">掲載内容</button><button data-cm="status">状態</button></div></div>
+  <div id="legend" style="display:none"></div>
+  <svg id="map" viewBox="-70 70 1230 1640" xmlns="http://www.w3.org/2000/svg"><g id="static">${staticMap()}</g><g id="pins"></g></svg>
+  <div id="tip"></div>
+ </section>
+ <aside>
+  <section class="card sec"><h2>状態別の台数（クリックで表示切替）</h2><div id="counts"></div></section>
+  <section class="card sec" id="form"></section>
+ </aside>
+ <section class="card" id="tableCard">
+  <div id="tableHead"><h2>サイネージ台帳</h2><input id="q" placeholder="ID・場所・コンテンツで検索"><div class="sp"></div>
+   <button id="bCopy">このタブをコピー</button><button id="bCopyAll">全タブをコピー</button><button id="bCsv" style="display:none">CSVダウンロード</button><button id="bImp">貼り付けて取り込み</button></div>
+  <div class="tw"><table><thead><tr>${['ID','エリア','場所','状態','配信グループ','掲載数','掲載内容・更新状況','サイズ・機種','備考'].map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody id="tb"></tbody></table></div>
+ </section>
+</main>
+<div class="modal" id="mImp"><div class="mbox"><h3>スプレッドシートから取り込み</h3>
+<p>Googleスプレッドシートで見出し行ごと範囲をコピーして貼り付けてください（タブ区切り・CSVどちらでも可）。IDが一致する行は上書きし、新しいIDは追加します。X・Y列があれば位置も反映します。</p>
+<textarea id="impTxt"></textarea><div class="mact"><button id="impCancel">キャンセル</button><button class="primary" id="impOk">取り込む</button></div></div></div>
+<div class="modal" id="mCopy"><div class="mbox"><h3>コピーできませんでした</h3><p>下の内容をすべて選択してコピーし、スプレッドシートのA1セルに貼り付けてください。</p><textarea id="copyTxt" readonly></textarea><div class="mact"><button id="copyClose">閉じる</button></div></div></div>
+<div class="modal" id="mPre"><div class="mbox"><h3>掲載内容の候補を編集</h3><p>1行に1つずつ入力してください。全サイネージ共通の候補になります（登録済みの掲載内容は変わりません）。</p>
+<textarea id="preTxt" style="min-height:160px;font-family:inherit;font-size:14px"></textarea><div class="mact"><button id="preCancel">キャンセル</button><button class="primary" id="preOk">保存</button></div></div></div>
+<datalist id="presetList"></datalist>
+<div id="toast"></div>`);
+}
+
+function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',2600)}
+function setDirty(d){dirty=d;const s=$('#saveState');
+  if(!art){s.textContent=d?'変更あり（この画面では保存できません。コピーで書き出してください）':'';s.className=d?'dirty':'';$('#bSave').disabled=true;return}
+  s.className=d?'dirty':'';s.textContent=d?'未保存の変更があります':(S.updatedAt?'最終保存 '+S.updatedAt:'');$('#bSave').disabled=!d}
+
+const PAL=['#e0473b','#2f6fde','#e39a1b','#2e9d5b','#8e55c9','#1aa3b8','#d4558f','#7d8b2a','#b5651d','#4b5bd6'];
+const OTHER='#6f7787',NONE='#dfe3e9';
+let cmode='content',cfocus=null;try{const m=localStorage.getItem('sg-cmode');if(m==='status'||m==='content')cmode=m}catch(e){}
+const ccol=t=>{const i=S.presets.indexOf(t);return i>=0?PAL[i%PAL.length]:OTHER};
+const ckey=t=>S.presets.includes(t)?t:'__other';
+function visible(it){
+  if(hidden.has(it.status))return false;
+  if(cmode==='content'&&cfocus){if(cfocus==='__none'?it.contents.length:!it.contents.some(c=>ckey(c.t)===cfocus))return false}
+  if(onlyLate&&!lateCount(it))return false;
+  if(q){const t=(it.id+' '+it.area+' '+it.loc+' '+it.size+' '+it.group+' '+it.contents.map(c=>c.t).join(' ')+' '+it.note).toLowerCase();if(!t.includes(q))return false}
+  return true}
+
+function drawPins(){
+  $('#pins').innerHTML=S.items.map((it,i)=>{const w=it.w||40,h=it.h||36,cx=it.x+w/2,cy=it.y+h/2,W=Math.max(w,52),H=Math.max(h,40);
+    const x0=cx-W/2,y0=cy-H/2;let body;
+    if(cmode==='content'){const cs=it.contents;
+      if(!cs.length)body=`<rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="${NONE}"/>`;
+      else{const sw=W/cs.length;body=`<clipPath id="cp${i}"><rect x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6"/></clipPath><g clip-path="url(#cp${i})">${cs.map((c,j)=>`<rect class="sg" x="${x0+j*sw}" y="${y0}" width="${sw+.5}" height="${H}" fill="${ccol(c.t)}"/>`).join('')}</g><rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="none"/>`}}
+    else body=`<rect class="bd" x="${x0}" y="${y0}" width="${W}" height="${H}" rx="6" fill="${col(it.status)}"/>`;
+    return `<g class="pin${visible(it)?'':' dim'}${sel===it.id?' sel':''}${cmode==='content'?' cm'+(it.contents.length?'':' empty'):''}" data-id="${esc(it.id)}">${body}<text x="${cx}" y="${cy}">${esc(String(it.id).replace(/^S/,''))}</text>${lateCount(it)?`<circle class="late" cx="${cx+W/2-2}" cy="${cy-H/2+2}" r="9"/>`:''}</g>`}).join('');
+  drawLegend();
+}
+function drawLegend(){const L=$('#legend');if(cmode!=='content'){L.style.display='none';return}L.style.display='';
+  const n=k=>S.items.filter(it=>k==='__none'?!it.contents.length:it.contents.some(c=>ckey(c.t)===k)).length;
+  const rows=S.presets.map(p=>[p,p,ccol(p)]);if(n('__other'))rows.push(['__other','その他（自由入力）',OTHER]);rows.push(['__none','掲載なし',NONE]);
+  L.innerHTML=rows.map(([k,l,c])=>`<button class="lg${cfocus===k?' on':''}" data-lg="${esc(k)}"><span class="sw" style="background:${c}"></span>${esc(l)}<b>${n(k)}</b></button>`).join('')+(cfocus?'<button class="lg clr" data-lg="">すべて表示</button>':'<span class="lgh">1台に複数あるときはピンを分割して表示／クリックで絞り込み</span>')}
+function drawCounts(){
+  let h=`<div class="cnt total"><div class="n">${S.items.length}</div><div class="k">合計</div></div>`;
+  STATUS.forEach(s=>{const n=S.items.filter(i=>i.status===s.k).length;h+=`<div class="cnt${hidden.has(s.k)?' off':''}" data-k="${s.k}"><div class="n">${n}</div><div class="k"><span class="dot" style="background:${s.c}"></span>${s.k}</div></div>`});
+  const late=S.items.filter(i=>lateCount(i)).length,full=S.items.filter(i=>i.contents.length>=MAXC).length;
+  h+=`<div class="cnt wide${onlyLate?' on':''}" data-late="1"><div class="k"><span class="dot" style="background:#d6453d"></span>更新遅れ</div><div class="n">${late}<small> 台</small></div></div>`;
+  h+=`<div class="cnt wide info"><div class="k">掲載が上限（${MAXC}件）</div><div class="n">${full}<small> 台</small></div></div>`;
+  h+=`<div class="fset">更新の目安　頻度高 <input type="number" min="1" data-fd="高" value="${S.freqDays['高']}"> 日／頻度低 <input type="number" min="1" data-fd="低" value="${S.freqDays['低']}"> 日</div>`;
+  $('#counts').innerHTML=h;
+}
+function stateHtml(c){const d=due(c);if(!d)return '';
+  if(d.state==='none')return '<span class="st none">最終更新日未入力</span>';
+  if(d.state==='late')return `<span class="st late">${d.days}日遅れ</span>`;
+  return `<span class="st ok">次回 ${fmt(d.next)}</span>`}
+function drawTable(){
+  $('#tb').innerHTML=S.items.filter(visible).map(it=>`<tr data-id="${esc(it.id)}" class="${sel===it.id?'sel':''}"><td><b>${esc(it.id)}</b></td><td>${esc(it.area)}</td><td>${esc(it.loc)}</td><td><span class="badge"><span class="dot" style="background:${col(it.status)}"></span>${esc(it.status)}</span></td><td>${esc(it.group)}</td><td class="cn">${it.contents.length}/${MAXC}</td><td>${it.contents.map(c=>`<div class="cl"><span class="sw" style="background:${ccol(c.t)}"></span><span>${esc(c.t)||'（未入力）'}</span>${c.f?`<span class="fq f${c.f==='高'?'h':'l'}">頻度${esc(c.f)}</span>`:''}${stateHtml(c)}</div>`).join('')}</td><td>${esc(it.size)}</td><td>${esc(it.note)}</td></tr>`).join('')||`<tr><td colspan="9" class="empty">該当するサイネージはありません</td></tr>`;
+}
+function drawForm(){
+  const it=S.items.find(i=>i.id===sel);const f=$('#form');
+  if(!it){f.innerHTML=`<h2>詳細</h2><p class="empty">地図のピンか台帳の行をクリックすると、ここで状態・掲載内容・更新頻度などを編集できます。<br>「配置を編集」でピンの移動・追加・削除ができます。</p>`;return}
+  f.innerHTML=`<div id="formHead"><span class="big">${esc(it.id)}</span><span>${edit?'<button class="danger" id="bDel">削除</button>':''} <button id="bClose">閉じる</button></span></div>
+  <div class="row"><label>状態</label><div class="seg">${STATUS.map(s=>`<button data-st="${s.k}" class="${it.status===s.k?'cur':''}"><span class="dot" style="background:${s.c}"></span>${s.k}</button>`).join('')}</div></div>
+  <div class="two row"><div><label>ID</label><input data-f="id" value="${esc(it.id)}"></div><div><label>エリア</label><input data-f="area" value="${esc(it.area)}"></div></div>
+  <div class="row"><label>場所</label><input data-f="loc" value="${esc(it.loc)}"></div>
+  <div class="row"><label>サイズ・機種</label><input data-f="size" value="${esc(it.size)}" placeholder="例：43インチ 縦置き"></div>
+  <div class="row"><label>配信グループ（CMS）</label><input data-f="group" value="${esc(it.group)}" placeholder="例：スロットAグループ"></div>
+  <div class="row"><label>掲載内容 <span class="ptag">${esc(planName(plan))}</span>（${it.contents.length}/${MAXC}）</label>
+   ${it.contents.map((c,i)=>`<div class="cbox"><div class="chead"><span class="sw" style="background:${ccol(c.t)}"></span><b>${i+1}</b><input data-c="${i}" data-cf="t" value="${esc(c.t)}" placeholder="候補から選ぶか自由入力" list="presetList"><button class="x" data-cdel="${i}" title="削除">×</button></div>
+    <div class="cgrid"><select data-c="${i}" data-cf="f"><option value="">更新頻度</option>${FREQ.map(x=>`<option value="${x.k}"${c.f===x.k?' selected':''}>頻度：${x.k}</option>`).join('')}</select>
+    <input type="date" data-c="${i}" data-cf="l" value="${esc(c.l)}" title="最終更新日"><button data-ctoday="${i}">今日更新した</button></div>
+    <div class="cstate">${c.l?'最終更新 '+esc(c.l.replace(/-/g,'/'))+'　':''}${stateHtml(c)}</div></div>`).join('')}
+   ${it.contents.length<MAXC?`<div class="pre"><span>候補から追加</span>${S.presets.map(p=>{const used=it.contents.some(c=>c.t===p);return `<button class="chip" data-pre="${esc(p)}"${used?' disabled title="追加済み"':''}>${esc(p)}</button>`}).join('')}<button class="chip edit" id="preEdit">候補を編集</button></div><button id="cAdd" class="addc">＋ 自由入力で追加</button>`:`<div class="limit">掲載内容は1台につき最大${MAXC}件です</div>`}</div>
+  <div class="row"><label>設置日</label><input type="date" data-f="date" value="${esc(it.date)}"></div>
+  <div class="row"><label>備考</label><textarea data-f="note">${esc(it.note)}</textarea></div>`;
+}
+function drawPresets(){$('#presetList').innerHTML=S.presets.map(p=>`<option value="${esc(p)}">`).join('')}
+function drawTabs(){
+  const cur=S.plans.find(p=>p.id===plan);let h=S.plans.map(p=>p.id===plan&&renaming?`<input id="tabName" value="${esc(p.name)}">`:`<button class="tab${p.id===plan?' cur':''}" data-plan="${esc(p.id)}">${esc(p.name)}</button>`).join('');
+  h+=`<button class="tab add" id="tabAdd">＋ タブを追加</button><span class="sp"></span>`;
+  h+=`<span class="tabact"><button id="tabRen">名前を変更</button>`;
+  if(plan!=='normal')h+=`<button id="tabCopy">${tabConfirm==='copy'?'上書きしてコピーする':'通常営業からコピー'}</button><button id="tabDel" class="danger">${tabConfirm==='del'?'本当に削除':'このタブを削除'}</button>`;
+  h+=`</span>`;$('#tabs').innerHTML=h;
+  const ti=$('#tabName');if(ti){ti.focus();ti.select()}}
+function switchPlan(id){plan=id;try{localStorage.setItem('sg-plan',id)}catch(e){}bindPlan();cfocus=null;tabConfirm=null;renaming=false;all()}
+function all(){drawTabs();drawPresets();drawPins();drawCounts();drawTable();drawForm()}
+function select(id){sel=id;all();if(id){const r=document.querySelector(`#tb tr[data-id="${CSS.escape(id)}"]`);if(r)r.scrollIntoView({block:'nearest'})}}
+
+function bind(){
+  $('#store').value=S.store||'';
+  $('#store').addEventListener('input',e=>{S.store=e.target.value;setDirty(true)});
+  $('#counts').addEventListener('change',e=>{const k=e.target.dataset.fd;if(!k)return;const v=parseInt(e.target.value,10);if(!(v>0)){e.target.value=S.freqDays[k];return}S.freqDays[k]=v;setDirty(true);all()});
+  $('#counts').addEventListener('click',e=>{if(e.target.closest('.fset'))return;if(e.target.closest('[data-late]')){onlyLate=!onlyLate;all();return}const c=e.target.closest('.cnt[data-k]');if(!c)return;const k=c.dataset.k;hidden.has(k)?hidden.delete(k):hidden.add(k);all()});
+  $('#q').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();drawPins();drawTable()});
+  $('#tb').addEventListener('click',e=>{const r=e.target.closest('tr[data-id]');if(r)select(r.dataset.id)});
+  const f=$('#form');
+  f.addEventListener('click',e=>{
+    const b=e.target.closest('button');if(!b)return;const it=S.items.find(i=>i.id===sel);
+    if(b.dataset.st&&it){it.status=b.dataset.st;setDirty(true);all()}
+    else if(b.id==='bClose')select(null);
+    else if(b.id==='cAdd'&&it){if(it.contents.length>=MAXC){toast('掲載内容は最大'+MAXC+'件までです');return}it.contents.push({t:'',f:'',l:''});setDirty(true);all();const ins=f.querySelectorAll('input[data-cf="t"]');ins[ins.length-1].focus()}
+    else if(b.dataset.pre!=null&&it){if(it.contents.length>=MAXC){toast('掲載内容は最大'+MAXC+'件までです');return}it.contents.push({t:b.dataset.pre,f:'',l:''});setDirty(true);all()}
+    else if(b.id==='preEdit'){$('#preTxt').value=S.presets.join('\n');$('#mPre').classList.add('open');$('#preTxt').focus()}
+    else if(b.dataset.cdel!=null&&it){it.contents.splice(+b.dataset.cdel,1);setDirty(true);all()}
+    else if(b.dataset.ctoday!=null&&it){const d=new Date();it.contents[+b.dataset.ctoday].l=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');setDirty(true);all()}
+    else if(b.id==='bDel'&&it){if(b.dataset.c){S.items=S.items.filter(i=>i!==it);setDirty(true);select(null);toast(it.id+' を削除しました')}else{b.dataset.c='1';b.textContent='本当に削除'}}
+  });
+  const cEdit=e=>{const t=e.target;if(t.dataset.c==null)return false;const it=S.items.find(i=>i.id===sel);if(!it)return true;
+    it.contents[+t.dataset.c][t.dataset.cf]=t.value;setDirty(true);drawPins();drawTable();drawCounts();
+    if(t.dataset.cf!=='t'){const c=it.contents[+t.dataset.c];t.closest('.cbox').querySelector('.cstate').innerHTML=(c.l?'最終更新 '+esc(c.l.replace(/-/g,'/'))+'　':'')+stateHtml(c)}return true};
+  f.addEventListener('change',e=>{if(e.target.tagName==='SELECT'||e.target.type==='date')cEdit(e)});
+  f.addEventListener('input',e=>{if(e.target.dataset.c!=null){if(e.target.dataset.cf==='t')cEdit(e);return}const k=e.target.dataset.f;if(!k)return;const it=S.items.find(i=>i.id===sel);if(!it)return;
+    if(k==='id'){const v=e.target.value.trim();if(!v||S.items.some(i=>i!==it&&i.id===v)){e.target.style.borderColor='#d6453d';return}e.target.style.borderColor='';it.id=v;sel=v}
+    else it[k]=e.target.value;
+    setDirty(true);drawPins();drawTable();drawCounts()});
+  $('#bEdit').addEventListener('click',()=>{edit=!edit;adding=false;document.body.classList.toggle('edit',edit);document.body.classList.remove('adding');
+    $('#bEdit').classList.toggle('on',edit);$('#bEdit').textContent=edit?'編集を終了':'配置を編集';$('#bAdd').style.display=edit?'':'none';$('#bAdd').classList.remove('on');
+    $('#hint').textContent=edit?'ピンをドラッグで移動／「＋追加」→地図をクリックで新規配置':'ピンをクリックすると詳細を表示します';drawForm()});
+  $('#bAdd').addEventListener('click',()=>{adding=!adding;document.body.classList.toggle('adding',adding);$('#bAdd').classList.toggle('on',adding);$('#hint').textContent=adding?'置きたい場所をクリックしてください':'ピンをドラッグで移動／「＋追加」→地図をクリックで新規配置'});
+  const svg=$('#map'),tip=$('#tip');
+  const pt=e=>{const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())};
+  let drag=null;
+  svg.addEventListener('pointerdown',e=>{
+    const g=e.target.closest('.pin');
+    if(adding&&!g){const p=pt(e);let n=1;while(S.items.some(i=>i.id==='S'+String(n).padStart(2,'0')))n++;
+      const it={id:'S'+String(n).padStart(2,'0'),area:'',loc:'',x:Math.round(p.x-20),y:Math.round(p.y-18),w:40,h:36,status:'予定',size:'',content:'',date:'',note:''};
+      it.group='';it.contents=[];it.cplan={[plan]:it.contents};delete it.content;S.items.push(it);adding=false;document.body.classList.remove('adding');$('#bAdd').classList.remove('on');setDirty(true);select(it.id);return}
+    if(!g)return;const it=S.items.find(i=>i.id===g.dataset.id);
+    if(edit){const p=pt(e);drag={it,dx:p.x-it.x,dy:p.y-it.y,moved:false};svg.setPointerCapture(e.pointerId)}
+    select(it.id)});
+  svg.addEventListener('pointermove',e=>{
+    if(drag){const p=pt(e);drag.it.x=Math.round(p.x-drag.dx);drag.it.y=Math.round(p.y-drag.dy);drag.moved=true;drawPins();tip.style.display='none';return}
+    const g=e.target.closest('.pin');if(!g){tip.style.display='none';return}
+    const it=S.items.find(i=>i.id===g.dataset.id);const r=$('#mapCard').getBoundingClientRect();
+    tip.innerHTML=`<b>${esc(it.id)}</b> ${esc(it.area)} ${esc(it.loc)}｜${esc(it.status)}｜掲載${it.contents.length}/${MAXC}${lateCount(it)?'｜更新遅れ'+lateCount(it)+'件':''}`;
+    tip.style.display='block';tip.style.left=(e.clientX-r.left+12)+'px';tip.style.top=(e.clientY-r.top+12)+'px'});
+  svg.addEventListener('pointerleave',()=>tip.style.display='none');
+  const end=()=>{if(drag&&drag.moved)setDirty(true);drag=null};
+  svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);
+  const copyOut=t=>(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('コピーしました。スプレッドシートのA1セルに貼り付けてください')).catch(()=>{$('#copyTxt').value=t;$('#mCopy').classList.add('open');$('#copyTxt').select()});
+  $('#bCopyAll').addEventListener('click',()=>copyOut(toTable('\t',S.plans.map(p=>p.id))));
+  $('#bCopy').addEventListener('click',()=>{const t=toTable('\t');
+    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('コピーしました。スプレッドシートのA1セルに貼り付けてください')).catch(()=>{$('#copyTxt').value=t;$('#mCopy').classList.add('open');$('#copyTxt').select()})});
+  $('#copyClose').addEventListener('click',()=>$('#mCopy').classList.remove('open'));
+  $('#bCsv').addEventListener('click',()=>dlFile('signage_'+stamp()+'.csv','\ufeff'+toTable(',',S.plans.map(p=>p.id)),'text/csv'));
+  $('#bImp').addEventListener('click',()=>{$('#impTxt').value='';$('#mImp').classList.add('open');$('#impTxt').focus()});
+  $('#impCancel').addEventListener('click',()=>$('#mImp').classList.remove('open'));
+  $('#impOk').addEventListener('click',()=>{const r=importText($('#impTxt').value);$('#mImp').classList.remove('open');if(r)toast(r)});
+  $('#bSave').addEventListener('click',save);
+  const tabs=$('#tabs');
+  tabs.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.plan){if(b.dataset.plan!==plan)switchPlan(b.dataset.plan);return}
+    if(b.id==='tabAdd'){let n=S.plans.length,nm;do{nm='イベント'+n;n++}while(S.plans.some(p=>p.name===nm));
+      const p={id:'p'+Date.now().toString(36),name:nm};S.plans.push(p);setDirty(true);switchPlan(p.id);renaming=true;drawTabs();return}
+    if(b.id==='tabRen'){renaming=true;drawTabs();return}
+    if(b.id==='tabCopy'){if(tabConfirm!=='copy'){tabConfirm='copy';drawTabs();return}
+      S.items.forEach(it=>{it.cplan[plan]=(it.cplan.normal||[]).map(c=>({...c}))});bindPlan();tabConfirm=null;setDirty(true);all();toast('通常営業の掲載内容をコピーしました');return}
+    if(b.id==='tabDel'){if(tabConfirm!=='del'){tabConfirm='del';drawTabs();return}
+      const nm=planName(plan);S.plans=S.plans.filter(p=>p.id!==plan);S.items.forEach(it=>delete it.cplan[plan]);setDirty(true);switchPlan('normal');toast('「'+nm+'」を削除しました');return}});
+  const finishRen=()=>{const ti=$('#tabName');if(!ti)return;const v=ti.value.trim();const p=S.plans.find(x=>x.id===plan);
+    if(v&&v!==p.name&&!S.plans.some(x=>x!==p&&x.name===v)){p.name=v;setDirty(true)}renaming=false;all()};
+  tabs.addEventListener('keydown',e=>{if(e.target.id==='tabName'){if(e.key==='Enter')finishRen();if(e.key==='Escape'){renaming=false;drawTabs()}}});
+  tabs.addEventListener('focusout',e=>{if(e.target.id==='tabName')finishRen()});
+  document.querySelector('.cmode').addEventListener('click',e=>{const b=e.target.closest('[data-cm]');if(!b)return;cmode=b.dataset.cm;cfocus=null;try{localStorage.setItem('sg-cmode',cmode)}catch(e){}
+    document.querySelectorAll('.cmode [data-cm]').forEach(x=>x.classList.toggle('on',x===b));all()});
+  $('#legend').addEventListener('click',e=>{const b=e.target.closest('[data-lg]');if(!b)return;const k=b.dataset.lg;cfocus=(!k||cfocus===k)?null:k;all()});
+  $('#preCancel').addEventListener('click',()=>$('#mPre').classList.remove('open'));
+  $('#preOk').addEventListener('click',()=>{const v=[...new Set($('#preTxt').value.split(/\n/).map(x=>x.replace(/^[・\s]+|\s+$/g,'')).filter(Boolean))];S.presets=v;$('#mPre').classList.remove('open');setDirty(true);all();toast('候補を'+v.length+'件にしました')});
+  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+}
+
+function cell(v,d){v=String(v==null?'':v);if(d===','&&/[",\n]/.test(v))return '"'+v.replace(/"/g,'""')+'"';if(d==='\t')return v.replace(/[\t\n]/g,' ');return v}
+function toTable(d,pids){pids=pids||[plan];const out=[COLS.map(c=>c[1]).join(d)];pids.forEach(pid=>S.items.forEach(it=>out.push(COLS.map(c=>cell(getv(it,c[0],pid),d)).join(d))));return out.join('\n')}
+function parse(txt){
+  const d=txt.includes('\t')?'\t':',';const rows=[];let row=[],f='',inq=false;
+  for(let i=0;i<txt.length;i++){const c=txt[i];
+    if(inq){if(c==='"'){if(txt[i+1]==='"'){f+='"';i++}else inq=false}else f+=c}
+    else if(c==='"'&&f==='')inq=true;else if(c===d){row.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&txt[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f=''}else f+=c}
+  if(f!==''||row.length){row.push(f);rows.push(row)}
+  return rows.filter(r=>r.some(x=>x.trim()!==''))}
+function importText(txt){
+  const rows=parse(txt.replace(/^﻿/,''));if(rows.length<2)return '見出し行とデータ行が見つかりませんでした';
+  const head=rows[0].map(h=>h.trim());const idx={};COLS.forEach(([k,l])=>{const i=head.indexOf(l);if(i>=0)idx[k]=i});
+  if(idx.id==null)return '「ID」列が見つかりませんでした';
+  let up=0,ad=0;const seen=new Set();
+  rows.slice(1).forEach(r=>{const id=(r[idx.id]||'').trim();if(!id)return;let it=S.items.find(i=>i.id===id);
+    let pid=plan;if(idx.tab!=null){const nm=(r[idx.tab]||'').trim();if(nm){let p=S.plans.find(x=>x.name===nm);if(!p){p={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:nm};S.plans.push(p)}pid=p.id}}
+    if(!it){it={id,area:'',loc:'',x:120,y:120,w:40,h:36,status:'予定',size:'',group:'',contents:[],cplan:{},date:'',note:''};S.items.push(it);ad++}else if(!seen.has(id))up++;seen.add(id);
+    if([1,2,3].some(n=>idx['c'+n+'t']!=null)){const cs=[];for(let n=1;n<=MAXC;n++){const g=k=>idx['c'+n+k]!=null?(r[idx['c'+n+k]]||'').trim():'';
+      const c={t:g('t'),f:FREQ.some(x=>x.k===g('f'))?g('f'):'',l:/^\d{4}[-/]\d{1,2}[-/]\d{1,2}$/.test(g('l'))?g('l').replace(/\//g,'-').replace(/-(\d)(?=-|$)/g,'-0$1'):''};if(c.t||c.f||c.l)cs.push(c)}it.cplan[pid]=cs}
+    COLS.forEach(([k])=>{if(k==='id'||k==='tab'||/^c\d/.test(k)||idx[k]==null)return;let v=(r[idx[k]]||'').trim();
+      if(k==='x'||k==='y'){const n=parseFloat(v);if(!isNaN(n))it[k]=n;return}
+      if(k==='status'&&!STATUS.some(s=>s.k===v))v=it.status;it[k]=v})});
+  bindPlan();setDirty(true);all();return `${up}件を更新、${ad}件を追加しました`}
+
+async function save(){
+  if(!dirty)return;const d=new Date();S.updatedAt=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  try{localStorage.setItem(LSK,JSON.stringify(S,(k,v)=>k==='contents'?undefined:v));setDirty(false);toast('このブラウザに保存しました')}
+  catch(e){toast('保存できませんでした（ブラウザの設定を確認してください）')}}
+function dlFile(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+const stamp=()=>new Date().toISOString().slice(0,10);
+
+shell();bind();document.querySelectorAll('.cmode [data-cm]').forEach(x=>x.classList.toggle('on',x.dataset.cm===cmode));all();setDirty(false);
+art={};setDirty(false);$('#bCsv').style.display='';
+$('#bJsonOut').addEventListener('click',()=>dlFile('signage_data_'+stamp()+'.json',JSON.stringify(S,(k,v)=>k==='contents'?undefined:v,1),'application/json'));
+$('#jsonIn').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.items))throw 0;
+  localStorage.setItem(LSK,JSON.stringify(d));location.reload()}catch(err){toast('データファイルを読み込めませんでした')}};r.readAsText(f)});
+$('#bReset').addEventListener('click',e=>{const b=e.target;if(!b.dataset.c){b.dataset.c='1';b.textContent='本当に初期状態に戻す';return}try{localStorage.removeItem(LSK)}catch(err){}location.reload()});
+})();
+</script>
+</body></html>
